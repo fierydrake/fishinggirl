@@ -15,6 +15,7 @@ public class FishingGirlGame implements ApplicationListener {
 	private SpriteBatch batch;
 	private Texture texture;
 	private Sprite sprite;
+	private FishingRod fishingRod;
 	
 	@Override
 	public void create() {		
@@ -33,6 +34,8 @@ public class FishingGirlGame implements ApplicationListener {
 		sprite.setSize(0.9f, 0.9f * sprite.getHeight() / sprite.getWidth());
 		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 		sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
+		
+		fishingRod = new FishingRod();
 	}
 
 	@Override
@@ -46,9 +49,10 @@ public class FishingGirlGame implements ApplicationListener {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		batch.setProjectionMatrix(camera.combined);
+//		/batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		sprite.draw(batch);
+
+		fishingRod.draw(batch);
 		batch.end();
 	}
 
