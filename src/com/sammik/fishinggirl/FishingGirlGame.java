@@ -17,6 +17,8 @@ public class FishingGirlGame implements ApplicationListener {
 	private Sprite sprite;
 	private FishingRod fishingRod;
 	
+	
+	
 	@Override
 	public void create() {		
 		float w = Gdx.graphics.getWidth();
@@ -49,6 +51,7 @@ public class FishingGirlGame implements ApplicationListener {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
+		fishingRod.update();
 //		/batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 
