@@ -19,6 +19,8 @@ public class FishingGirlGame implements ApplicationListener {
 	private Sprite house;
 	private FishingRod fishingRod;
 	
+	
+	
 	@Override
 	public void create() {
 		// FIXME LATER: ignore window size for now. Assume it matches world size 
@@ -59,6 +61,7 @@ public class FishingGirlGame implements ApplicationListener {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		batch.setProjectionMatrix(camera.combined);
+		fishingRod.update();
 		batch.begin();
 		background.draw(batch);
 		water.draw(batch);
