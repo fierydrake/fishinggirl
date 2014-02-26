@@ -4,16 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class FishingRod {
-	private int x, y;
-	private Sprite fishingRodSprite;
-	private Texture fishingRodTexture;
-	
+public class FishingRod extends GameObject {
 	private Lure lure;
 	
 	private boolean pulling = false;
@@ -23,25 +17,14 @@ public class FishingRod {
 	private int pullForceIncreaseSpeed = 1;
 	private boolean casting;
 	
-
-	public FishingRod() {
+	public FishingRod(final float x, final float y) {
+		super(new TextureRegion(new Texture(Gdx.files.local("fishingGirl/fishingRod1.png")), 0, 0, 197, 15), x, y);
+		
 		MyInputProcessor inputProcessor = new MyInputProcessor();
 		Gdx.input.setInputProcessor(inputProcessor);
 		
-		x = 50;
-		y = 500;
-		
-		Texture.setEnforcePotImages(false);
-		fishingRodTexture = new Texture(Gdx.files.local("fishingGirl/fishingRod1.png"));
-		fishingRodTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		
-		
-		TextureRegion region = new TextureRegion(fishingRodTexture, 0, 0, 197, 15);
-		
-		fishingRodSprite = new Sprite(region);
-		fishingRodSprite.setOrigin(0, fishingRodSprite.getHeight());
-		fishingRodSprite.setScale(0.8f);
-		fishingRodSprite.setPosition(x, y);
+		setOrigin(0, getHeight());
+		setScale(0.8f);
 		
 		lure = null;
 	}
@@ -58,7 +41,7 @@ public class FishingRod {
 		} else if(casting){
 			castAnimation();
 		} else {
-			fishingRodSprite.setRotation(0);
+			setRotation(0);
 			pullingForce = 0;
 		}
 		
@@ -69,7 +52,7 @@ public class FishingRod {
 				lure = null;
 			}
 		}
-		//fishingRodSprite.setPosition(x, y);
+		//sprite.setPosition(x, y);
 	}
 	
 	public void Cast() {
@@ -79,7 +62,7 @@ public class FishingRod {
 	
 	
 	public void draw(SpriteBatch batch) {
-		fishingRodSprite.draw(batch);
+		super.draw(batch);
 		if(lure != null) {
 			lure.draw(batch);
 		}
@@ -90,14 +73,14 @@ public class FishingRod {
 	}
 	
 	public void pullBack() {
-		fishingRodSprite.rotate(rotateSpeed);
+		rotate(rotateSpeed);
 	}
 	
 	public void castAnimation() {
-		if(fishingRodSprite.getRotation() > 0 && casting) {
-			fishingRodSprite.rotate(-rotateSpeed * 10);
+		if(getRotation() > 0 && casting) {
+			rotate(-rotateSpeed * 10);
 		} else {
-			fishingRodSprite.setRotation(0);
+			setRotation(0);
 			casting = false;
 		}
 	}
@@ -106,15 +89,6 @@ public class FishingRod {
 		pulling = b;
 	}
 	
-	public int getX() {
-		return this.x;
-	}
-	
-	public int getY() {
-		return this.y;
-	}
-
-
 	private class MyInputProcessor implements InputProcessor {
 		   @Override
 		   public boolean touchDown (int x, int y, int pointer, int button) {

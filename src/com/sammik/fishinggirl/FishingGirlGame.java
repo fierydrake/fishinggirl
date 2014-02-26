@@ -1,58 +1,64 @@
 package com.sammik.fishinggirl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class FishingGirlGame implements ApplicationListener {
 	public static final float WORLD_WIDTH = 2048, WORLD_HEIGHT = 2048;
 	
+	private Assets assets;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
-	private Sprite background;
+	private GameObject background;
 	private Ground cliff;
 	private Water water;
-	private Sprite house;
 	private FishingRod fishingRod;
-	
-	
+
+	private List<GameObject> backgroundLayer = new ArrayList<GameObject>();
+	private List<GameObject> baseLayer = new ArrayList<GameObject>();
+	private List<GameObject> foregroundLayer = new ArrayList<GameObject>();
 	
 	@Override
 	public void create() {
 		// FIXME LATER: ignore window size for now. Assume it matches world size 
-//		float w = Gdx.graphics.getWidth();
-//		float h = Gdx.graphics.getHeight();
+		float w = Gdx.graphics.getWidth()*2;
+		float h = Gdx.graphics.getHeight()*2;
 		
 		Texture.setEnforcePotImages(false);
 		
-		camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
-		camera.combined.translate(-WORLD_WIDTH/2f, -WORLD_HEIGHT/2f, 0);
+		assets = new Assets();
+		camera = new OrthographicCamera(w, h);
+		camera.combined.translate(-w/2f, -2048+h/2, 0);
 		batch = new SpriteBatch();
 		
-		cliff = new Ground(new Texture(Gdx.files.local("fishingGirl/cliff.png")));
-		water = new Water(new Texture(Gdx.files.local("fishingGirl/watertile.png")), cliff.getRight(), 0);
+		cliff = new Ground(assets.texture("cliff"), 0, 0);
+		background = new GameObject(assets.texture("background"), 0, cliff.getTop());
+		water = new Water(assets.texture("water"), cliff.getRight(), 0);
+		fishingRod = new FishingRod(cliff.getRight(), cliff.getTop());
 		
-		house = new Sprite(new Texture(Gdx.files.local("fishingGirl/landscape4.png")));
-		house.setPosition(cliff.getRight() - house.getWidth(), cliff.getTop()-2f);
-
-		background = new Sprite(new Texture(Gdx.files.local("fishingGirl/background.png")));
-		background.setPosition(0, cliff.getTop());
-		
-		fishingRod = new FishingRod();
+		backgroundLayer.add(background);
+		backgroundLayer.add(water);
+		baseLayer.add(cliff);
+		float x = 20, y = cliff.getTop();
+		baseLayer.add(new GameObject(assets.texture("rock3"), x, y));
+		baseLayer.add(new GameObject(assets.texture("smallTree"), x, y)); x+=assets.texture("smallTree").getWidth();
+		baseLayer.add(new GameObject(assets.texture("largeTree"), x, y)); x+=assets.texture("largeTree").getWidth();
+		baseLayer.add(new GameObject(assets.texture("lodge"), x, y)); x+=assets.texture("lodge").getWidth();
+		baseLayer.add(new GameObject(assets.texture("house"), x, y)); x+=assets.texture("house").getWidth();
+		foregroundLayer.add(fishingRod);
 	}
 
 	@Override
 	public void dispose() {
 		batch.dispose();
-		background.getTexture().dispose();
-//		cliff.dispose();
-//		house.dispose();
-//		water.dispose();
-//		fishingRod.dispose();
+		assets.disposeAll();
 	}
 
 	@Override
@@ -61,13 +67,16 @@ public class FishingGirlGame implements ApplicationListener {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		batch.setProjectionMatrix(camera.combined);
+		
+		// logic
 		fishingRod.update();
+		
+		// render
 		batch.begin();
 		background.draw(batch);
-		water.draw(batch);
-		cliff.draw(batch);
-		house.draw(batch);
-		fishingRod.draw(batch);
+		for (final GameObject s : backgroundLayer) s.draw(batch);
+		for (final GameObject s : baseLayer) s.draw(batch);
+		for (final GameObject s : foregroundLayer) s.draw(batch);
 		batch.end();
 	}
 
