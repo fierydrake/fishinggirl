@@ -24,6 +24,9 @@ public class Assets {
 		load("house", "landscape4.png");
 		load("fish1", "fishSmall1.png");
 		load("fish2", "fishLarge1.png");
+		load("smallLure", "lureSmall.png");
+		load("mediumLure", "lureMedium.png");
+		load("largeLure", "lureLarge.png");
 	}
 
 	public Texture texture(final String name) {

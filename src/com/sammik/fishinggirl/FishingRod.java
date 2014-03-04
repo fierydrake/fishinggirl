@@ -28,9 +28,8 @@ public class FishingRod extends GameObject {
 		MyInputProcessor inputProcessor = new MyInputProcessor();
 		Gdx.input.setInputProcessor(inputProcessor);
 		
-		lure = new Lure(this);
-		
-		
+		lure = new Lure(game, this, Lure.LureSize.SMALL);
+
 		setOrigin(0, getHeight() / 2);
 		setScale(0.8f);
 		
@@ -40,10 +39,7 @@ public class FishingRod extends GameObject {
 	}
 	
 	public void update() {
-		
-//		x = cx + r * cos(a)
-//		y = cy + r * sin(a)
-		
+
 		float dx = (getWidth()/2 + 45);
 		float dy = -10;
 	

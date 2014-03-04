@@ -33,6 +33,11 @@ public class GameObject extends Sprite {
 		setOrigin(ox, oy);
 		setPositionByOrigin(x, y);
 	}
+	
+	public float getLeft() {
+		final Rectangle bounds = getBoundingRectangle();
+		return bounds.x;
+	}
 
 	public void setPositionByOrigin(final float x, final float y) {
 		setPosition(x - getOriginX(), y - getOriginY());
