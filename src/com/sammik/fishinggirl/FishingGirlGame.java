@@ -52,7 +52,7 @@ public class FishingGirlGame implements ApplicationListener {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		fishingRod.update();
-//		/batch.setProjectionMatrix(camera.combined);
+		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 
 		fishingRod.draw(batch);
