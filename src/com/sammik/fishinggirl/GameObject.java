@@ -6,14 +6,28 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 public class GameObject extends Sprite {
-	public GameObject(final Texture texture, final float x, final float y) {
+	protected final FishingGirlGame game;
+	
+	public GameObject(final FishingGirlGame game, final Texture texture, final float x, final float y) {
 		super(texture);
+		this.game = game;
 		setPosition(x, y);
 	}
 	
-	public GameObject(final TextureRegion region, final float x, final float y) {
+	public GameObject(final FishingGirlGame game, final TextureRegion region, final float x, final float y) {
 		super(region);
+		this.game = game;
 		setPosition(x, y);
+	}
+	
+	public GameObject(final FishingGirlGame game, final Texture texture, final float x, final float y, final float ox, final float oy) {
+		this(game, texture, x, y);
+		setOrigin(ox, oy);
+	}
+	
+	public GameObject(final FishingGirlGame game, final TextureRegion region, final float x, final float y, final float ox, final float oy) {
+		this(game, region, x, y);
+		setOrigin(ox, oy);
 	}
 
 	public float getRight() {
