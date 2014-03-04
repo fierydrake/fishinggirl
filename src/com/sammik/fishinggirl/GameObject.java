@@ -21,15 +21,23 @@ public class GameObject extends Sprite {
 	}
 	
 	public GameObject(final FishingGirlGame game, final Texture texture, final float x, final float y, final float ox, final float oy) {
-		this(game, texture, x, y);
+		super(texture);
+		this.game = game;
 		setOrigin(ox, oy);
+		setPositionByOrigin(x, y);
 	}
 	
 	public GameObject(final FishingGirlGame game, final TextureRegion region, final float x, final float y, final float ox, final float oy) {
-		this(game, region, x, y);
+		super(region);
+		this.game = game;
 		setOrigin(ox, oy);
+		setPositionByOrigin(x, y);
 	}
 
+	public void setPositionByOrigin(final float x, final float y) {
+		setPosition(x - getOriginX(), y - getOriginY());
+	}
+	
 	public float getRight() {
 		final Rectangle bounds = getBoundingRectangle();
 		return bounds.x + bounds.width;

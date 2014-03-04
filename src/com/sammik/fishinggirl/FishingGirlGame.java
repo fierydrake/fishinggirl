@@ -45,12 +45,12 @@ public class FishingGirlGame implements ApplicationListener {
 		
 		backgroundLayer.add(background);
 		backgroundLayer.add(water);
-		baseLayer.add(cliff);
-		float x = 20, y = cliff.getTop();
-		baseLayer.add(new GameObject(this, assets.texture("smallTree"), x, y, 0, 0)); x+=assets.texture("smallTree").getWidth();
-		baseLayer.add(new GameObject(this, assets.texture("largeTree"), x, y, 0, 0)); x+=assets.texture("largeTree").getWidth();
-		baseLayer.add(new GameObject(this, assets.texture("lodge"), x, y, 0, 20)); x+=assets.texture("lodge").getWidth();
+		float x = 40, y = cliff.getTop();
+		baseLayer.add(new GameObject(this, assets.texture("smallTree"), x, y, 0, 74)); x+=assets.texture("smallTree").getWidth();
+		baseLayer.add(new GameObject(this, assets.texture("largeTree"), x, y, 0, 4)); x+=assets.texture("largeTree").getWidth();
+		baseLayer.add(new GameObject(this, assets.texture("lodge"), x, y, 0, 80)); x+=assets.texture("lodge").getWidth();
 		baseLayer.add(new GameObject(this, assets.texture("house"), x, y, 0, 10)); x+=assets.texture("house").getWidth();
+		baseLayer.add(cliff);
 		foregroundLayer.add(fishingRod);
 	}
 
@@ -70,7 +70,7 @@ public class FishingGirlGame implements ApplicationListener {
 		// logic
 		fishingRod.update();
 		
-		System.out.println(camera.viewportHeight + ", "+ camera.viewportWidth);
+//		System.out.println(camera.viewportHeight + ", "+ camera.viewportWidth);
 		// render
 		batch.begin();
 		background.draw(batch);

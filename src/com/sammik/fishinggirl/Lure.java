@@ -98,7 +98,6 @@ public class Lure {
 		if(!isSubmerged)ApplyGravity();
 		
 		if(x > Gdx.graphics.getWidth() || y > Gdx.graphics.getHeight() || x < 0 || y < 0) {
-			System.out.println("OFFSCREEN");
 			velX = 0;
 			velY = 0;
 			isSubmerged = false;
