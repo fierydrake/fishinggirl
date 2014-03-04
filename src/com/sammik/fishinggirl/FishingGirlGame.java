@@ -71,6 +71,7 @@ public class FishingGirlGame implements ApplicationListener {
 		// logic
 		fishingRod.update();
 		
+		System.out.println(camera.viewportHeight + ", "+ camera.viewportWidth);
 		// render
 		batch.begin();
 		background.draw(batch);
