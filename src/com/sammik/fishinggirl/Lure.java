@@ -104,7 +104,6 @@ public class Lure extends GameObject{
 		}
 		
 		if(getX() > FishingGirlGame.WORLD_WIDTH || getY() > FishingGirlGame.WORLD_HEIGHT || getX() < 0 || getY() < 0) {
-			System.out.println("OFFSCREEN");
 			velX = 0;
 			velY = 0;
 			isTouchingCliff = false;
