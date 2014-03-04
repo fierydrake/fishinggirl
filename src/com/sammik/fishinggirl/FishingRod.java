@@ -5,18 +5,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
-public class FishingRod {
-	private float x, y, poleEndX, poleEndY;
-	private Sprite fishingRodSprite;
-	private Texture fishingRodTexture;
-	
+public class FishingRod extends GameObject {
+	private float poleEndX, poleEndY;
 	private Lure lure;
 	
 	private boolean pulling = false;
@@ -27,29 +22,20 @@ public class FishingRod {
 	private int releasePoint = 30;
 	private boolean casting;
 	
-
-	public FishingRod() {
+	public FishingRod(final float x, final float y) {
+		super(new TextureRegion(new Texture(Gdx.files.local("fishingGirl/fishingRod1.png")), 0, 0, 197, 15), x, y);
+		
 		MyInputProcessor inputProcessor = new MyInputProcessor();
 		Gdx.input.setInputProcessor(inputProcessor);
 		
-		x = 50;
-		y = 500;
-		
-		Texture.setEnforcePotImages(false);
-		fishingRodTexture = new Texture(Gdx.files.local("fishingGirl/fishingRod1.png"));
-		fishingRodTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		
 		lure = new Lure(this);
 		
-		TextureRegion region = new TextureRegion(fishingRodTexture, 0, 0, 197, 15);
 		
-		fishingRodSprite = new Sprite(region);
-		fishingRodSprite.setOrigin(0, fishingRodSprite.getHeight() /2);
-		fishingRodSprite.setScale(0.8f);
-		fishingRodSprite.setPosition(x, y);
+		setOrigin(0, getHeight() / 2);
+		setScale(0.8f);
 		
-		poleEndX = fishingRodSprite.getX() + (fishingRodSprite.getWidth()/2 + 45);
-		poleEndY = fishingRodSprite.getY() - 10;
+		poleEndX = getX() + (getWidth()/2 + 45);
+		poleEndY = getY() - 10;
 		
 	}
 	
@@ -58,14 +44,14 @@ public class FishingRod {
 //		x = cx + r * cos(a)
 //		y = cy + r * sin(a)
 		
-		float dx = (fishingRodSprite.getWidth()/2 + 45);
+		float dx = (getWidth()/2 + 45);
 		float dy = -10;
 	
-		float ang = fishingRodSprite.getRotation() / 0.45f;
+		float ang = getRotation() / 0.45f;
 		float r = (float)Math.sqrt((dx * dx) + (dy * dy));
 		
-		poleEndX = (float) (fishingRodSprite.getX() + r * Math.cos(Math.PI * (ang/360.0)));
-		poleEndY = (float) (fishingRodSprite.getY() + r * Math.sin(Math.PI * (ang/360.0)));
+		poleEndX = (float) (getX() + r * Math.cos(Math.PI * (ang/360.0)));
+		poleEndY = (float) (getY() + r * Math.sin(Math.PI * (ang/360.0)));
 		
 		if(isPulling()) {
 			if(pullingForce < maxPullingForce) {
@@ -78,7 +64,7 @@ public class FishingRod {
 		} else if(casting){
 			castAnimation();
 		} else {
-			fishingRodSprite.setRotation(0);
+			setRotation(0);
 			pullingForce = 0;
 		}
 		
@@ -88,7 +74,7 @@ public class FishingRod {
 				lure.setAttached(true);
 			}
 		}
-		//fishingRodSprite.setPosition(x, y);
+		//sprite.setPosition(x, y);
 	}
 	
 	public void Cast() {
@@ -97,7 +83,7 @@ public class FishingRod {
 	
 	
 	public void draw(SpriteBatch batch) {
-		fishingRodSprite.draw(batch);
+		super.draw(batch);
 		if(lure != null) {
 			lure.draw(batch);
 		}
@@ -115,33 +101,25 @@ public class FishingRod {
 	}
 	
 	public void pullBack() {
-		fishingRodSprite.rotate(rotateSpeed);
+		rotate(rotateSpeed);
 	}
 	
 	public void castAnimation() {
-		if(lure.isAttached() && fishingRodSprite.getRotation() < releasePoint) {
+		if(lure.isAttached() && getRotation() < releasePoint) {
 			lure.Cast(pullingForce);
 			lure.setAttached(false);
 		}
 		
-		if(fishingRodSprite.getRotation() > 0 && casting) {
-			fishingRodSprite.rotate(-rotateSpeed * 10);
+		if(getRotation() > 0 && casting) {
+			rotate(-rotateSpeed * 10);
 		} else {
-			fishingRodSprite.setRotation(0);
+			setRotation(0);
 			casting = false;
 		}
 	}
 	
 	public void setPulling(boolean b) {
 		pulling = b;
-	}
-	
-	public float getX() {
-		return this.x;
-	}
-	
-	public float getY() {
-		return this.y;
 	}
 	
 	public float getEndX() {
@@ -151,7 +129,6 @@ public class FishingRod {
 	public float getEndY() {
 		return this.poleEndY;
 	}
-
 
 	private class MyInputProcessor implements InputProcessor {
 	   @Override
