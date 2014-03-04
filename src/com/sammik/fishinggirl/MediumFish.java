@@ -5,9 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class MediumFish extends Fish {
 
-	public MediumFish(final float x, float y){
+	public MediumFish(FishingGirlGame fgg,final float x, float y){
 		
-		super(new Texture(Gdx.files.local("fishingGirl/fishMedium1.png")), x, y);
+		super(fgg,new Texture(Gdx.files.local("fishingGirl/fishMedium1.png")), x, y);
 	
 	}
 	

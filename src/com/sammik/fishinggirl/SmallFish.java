@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class SmallFish extends Fish{
 	
-	public SmallFish(final float x, float y){
+	public SmallFish(FishingGirlGame fgg,final float x, float y){
 		
-		super(new Texture(Gdx.files.local("fishingGirl/fishSmall1.png")), x, y);
+		super(fgg,new Texture(Gdx.files.local("fishingGirl/fishSmall1.png")), x, y);
 	
 	}
 

@@ -44,8 +44,8 @@ public class FishingGirlGame implements ApplicationListener {
 		water = new Water(this, assets.texture("water"), cliff.getRight(), 0);
 		fishingRod = new FishingRod(this, cliff.getRight(), cliff.getTop());
 		
-		SmallFish fish1 = new SmallFish(cliff.getRight() + 100, cliff.getTop() - 400);
-		LargeFish fish2 = new LargeFish(cliff.getRight() + 300, cliff.getTop() - 300);
+		SmallFish fish1 = new SmallFish(this,cliff.getRight() + 100, cliff.getTop() - 400);
+		LargeFish fish2 = new LargeFish(this,cliff.getRight() + 300, cliff.getTop() - 300);
 		
 		fishes.add(fish1);
 		fishes.add(fish2);
