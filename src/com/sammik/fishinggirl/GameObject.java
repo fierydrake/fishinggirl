@@ -29,6 +29,11 @@ public class GameObject extends Sprite {
 		this(game, region, x, y);
 		setOrigin(ox, oy);
 	}
+	
+	public float getLeft() {
+		final Rectangle bounds = getBoundingRectangle();
+		return bounds.x;
+	}
 
 	public float getRight() {
 		final Rectangle bounds = getBoundingRectangle();

@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class FishingGirlGame implements ApplicationListener {
 	public static final float WORLD_WIDTH = 2048, WORLD_HEIGHT = 2048;
 	
-	private Assets assets;
+	Assets assets;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private GameObject background;
@@ -37,7 +37,7 @@ public class FishingGirlGame implements ApplicationListener {
 		camera = new OrthographicCamera(w, h);
 		camera.combined.translate(-w/2f, -2048+h/2, 0);
 		batch = new SpriteBatch();
-		
+	
 		cliff = new Ground(this, assets.texture("cliff"), 0, 0);
 		background = new GameObject(this, assets.texture("background"), 0, cliff.getTop());
 		water = new Water(this, assets.texture("water"), cliff.getRight(), 0);
@@ -57,6 +57,10 @@ public class FishingGirlGame implements ApplicationListener {
 	public Water getWater() {
 		return this.water;
 	}
+	
+	public Ground getCliff() {
+		return this.cliff;
+	}
 
 	@Override
 	public void dispose() {
@@ -73,8 +77,6 @@ public class FishingGirlGame implements ApplicationListener {
 		
 		// logic
 		fishingRod.update();
-		
-		System.out.println("Water top: " + (int)getWater().getTop());
 		// render
 		batch.begin();
 		background.draw(batch);
