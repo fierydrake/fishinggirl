@@ -40,7 +40,7 @@ public class Assets {
 	public void disposeAll() {
 		for (final String name : textures.keySet()) {
 			textures.get(name).dispose();
-			textures.remove(name);
 		}
+		textures.clear();
 	}
 }

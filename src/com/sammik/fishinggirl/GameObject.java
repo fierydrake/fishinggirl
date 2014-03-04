@@ -2,24 +2,40 @@ package com.sammik.fishinggirl;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
-// Simple wrapper for a Sprite
 public class GameObject extends Sprite {
-	public GameObject(final Texture texture, final float x, final float y) {
+	protected final FishingGirlGame game;
+	
+	public GameObject(final FishingGirlGame game, final Texture texture, final float x, final float y) {
 		super(texture);
+		this.game = game;
 		setPosition(x, y);
 	}
 	
-	public GameObject(final TextureRegion region, final float x, final float y) {
+	public GameObject(final FishingGirlGame game, final TextureRegion region, final float x, final float y) {
 		super(region);
+		this.game = game;
 		setPosition(x, y);
 	}
+	
+	public GameObject(final FishingGirlGame game, final Texture texture, final float x, final float y, final float ox, final float oy) {
+		super(texture);
+		this.game = game;
+		setOrigin(ox, oy);
+		setPositionByOrigin(x, y);
+	}
+	
+	public GameObject(final FishingGirlGame game, final TextureRegion region, final float x, final float y, final float ox, final float oy) {
+		super(region);
+		this.game = game;
+		setOrigin(ox, oy);
+		setPositionByOrigin(x, y);
+	}
 
-	public void draw(final SpriteBatch batch) {
-		super.draw(batch);
+	public void setPositionByOrigin(final float x, final float y) {
+		setPosition(x - getOriginX(), y - getOriginY());
 	}
 	
 	public float getRight() {

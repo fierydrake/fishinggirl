@@ -22,8 +22,8 @@ public class FishingRod extends GameObject {
 	private int releasePoint = 30;
 	private boolean casting;
 	
-	public FishingRod(final float x, final float y) {
-		super(new TextureRegion(new Texture(Gdx.files.local("fishingGirl/fishingRod1.png")), 0, 0, 197, 15), x, y);
+	public FishingRod(final FishingGirlGame game, final float x, final float y) {
+		super(game, new TextureRegion(new Texture(Gdx.files.local("fishingGirl/fishingRod1.png")), 0, 0, 197, 15), x, y);
 		
 		MyInputProcessor inputProcessor = new MyInputProcessor();
 		Gdx.input.setInputProcessor(inputProcessor);
