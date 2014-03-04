@@ -14,7 +14,7 @@ public class Lure {
 	private Texture lureTexture;
 	private LureSize lureSize;
 	private boolean onScreen;
-	private boolean isAttached, isCasting, isSubmerged;
+	private boolean isAttached, isCasting, isSubmerged, isTouchingCliff;
 	private float pullAmount;
 	
 	float absX;
@@ -28,7 +28,7 @@ public class Lure {
 	}
 	
 	private FishingRod fishingRod;
-	private int waterLevel = Gdx.graphics.getHeight() - 500;
+	private float waterLevel = FishingGirlGame.WORLD_HEIGHT / 2;
 	
 	
 	public Lure(FishingRod fishingRod) {
@@ -37,6 +37,7 @@ public class Lure {
 		this.isCasting = false;
 		lureSize = LureSize.SMALL;
 		this.fishingRod = fishingRod;
+		
 		
 		this.x = fishingRod.getX();
 		this.y = fishingRod.getY(); 
@@ -80,9 +81,8 @@ public class Lure {
 			this.x = fishingRod.getEndX();
 			this.y = fishingRod.getEndY();
 			onScreen = true;
-		} else if(isSubmerged) {
+		} else if(isSubmerged && !isTouchingCliff) {
 			isCasting = false;
-			
 			
 			aRad -= 0.011;
 			
@@ -95,9 +95,12 @@ public class Lure {
 		}
 		
 		
-		if(!isSubmerged)ApplyGravity();
-		
-		if(x > Gdx.graphics.getWidth() || y > Gdx.graphics.getHeight() || x < 0 || y < 0) {
+		if(!isSubmerged)	ApplyGravity();
+		else if(getLeft() < ){
+			
+		}
+		System.out.println("X: " + x + ". Y: " + y);
+		if(x > FishingGirlGame.WORLD_WIDTH || y > FishingGirlGame.WORLD_HEIGHT || x < 0 || y < 0) {
 			System.out.println("OFFSCREEN");
 			velX = 0;
 			velY = 0;

@@ -6,4 +6,6 @@ public class Water extends GameObject {
 	public Water(final Texture texture, final float x, final float y) {
 		super(texture, x, y);
 	}
+	
+	
 }

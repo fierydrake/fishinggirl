@@ -54,6 +54,10 @@ public class FishingGirlGame implements ApplicationListener {
 		baseLayer.add(new GameObject(assets.texture("house"), x, y)); x+=assets.texture("house").getWidth();
 		foregroundLayer.add(fishingRod);
 	}
+	
+	public Water getWater() {
+		return this.water;
+	}
 
 	@Override
 	public void dispose() {
@@ -71,7 +75,7 @@ public class FishingGirlGame implements ApplicationListener {
 		// logic
 		fishingRod.update();
 		
-		System.out.println(camera.viewportHeight + ", "+ camera.viewportWidth);
+		System.out.println("Water top: " + (int)getWater().getTop());
 		// render
 		batch.begin();
 		background.draw(batch);
