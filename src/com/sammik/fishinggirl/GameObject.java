@@ -2,11 +2,9 @@ package com.sammik.fishinggirl;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
-// Simple wrapper for a Sprite
 public class GameObject extends Sprite {
 	public GameObject(final Texture texture, final float x, final float y) {
 		super(texture);
@@ -18,10 +16,6 @@ public class GameObject extends Sprite {
 		setPosition(x, y);
 	}
 
-	public void draw(final SpriteBatch batch) {
-		super.draw(batch);
-	}
-	
 	public float getRight() {
 		final Rectangle bounds = getBoundingRectangle();
 		return bounds.x + bounds.width;
