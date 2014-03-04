@@ -24,7 +24,8 @@ public class FishingGirlGame implements ApplicationListener {
 	private List<GameObject> backgroundLayer = new ArrayList<GameObject>();
 	private List<GameObject> baseLayer = new ArrayList<GameObject>();
 	private List<GameObject> foregroundLayer = new ArrayList<GameObject>();
-	
+	private List<GameObject> fishes = new ArrayList<GameObject>();
+ 	
 	@Override
 	public void create() {
 		// FIXME LATER: ignore window size for now. Assume it matches world size 
@@ -43,6 +44,13 @@ public class FishingGirlGame implements ApplicationListener {
 		water = new Water(assets.texture("water"), cliff.getRight(), 0);
 		fishingRod = new FishingRod(cliff.getRight(), cliff.getTop());
 		
+		SmallFish fish1 = new SmallFish(cliff.getRight() + 100, cliff.getTop() - 400);
+		LargeFish fish2 = new LargeFish(cliff.getRight() + 300, cliff.getTop() - 300);
+		
+		fishes.add(fish1);
+		fishes.add(fish2);
+		
+		
 		backgroundLayer.add(background);
 		backgroundLayer.add(water);
 		baseLayer.add(cliff);
@@ -53,6 +61,10 @@ public class FishingGirlGame implements ApplicationListener {
 		baseLayer.add(new GameObject(assets.texture("lodge"), x, y)); x+=assets.texture("lodge").getWidth();
 		baseLayer.add(new GameObject(assets.texture("house"), x, y)); x+=assets.texture("house").getWidth();
 		foregroundLayer.add(fishingRod);
+		
+		for(int i = 0; i < fishes.size(); i++){
+			foregroundLayer.add(fishes.get(i));
+		}
 	}
 
 	@Override
