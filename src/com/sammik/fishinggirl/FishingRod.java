@@ -130,7 +130,6 @@ public class FishingRod extends GameObject {
 	private class MyInputProcessor implements InputProcessor {
 	   @Override
 	   public boolean touchDown (int x, int y, int pointer, int button) {
-		   System.out.println(x + ", " + y);
 		   if (button == Input.Buttons.LEFT) {
 			   lure.setPullAmount(5f);
 		   } else {

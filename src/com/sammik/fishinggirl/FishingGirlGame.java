@@ -61,7 +61,6 @@ public class FishingGirlGame implements ApplicationListener {
 		baseLayer.add(new GameObject(this, assets.texture("house"), x, y, 0, 10)); x+=assets.texture("house").getWidth();
 		baseLayer.add(cliff);
 		foregroundLayer.add(fishingRod);
-		
 		for(int i = 0; i < fishes.size(); i++){
 			foregroundLayer.add(fishes.get(i));
 		}

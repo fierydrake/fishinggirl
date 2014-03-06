@@ -64,9 +64,8 @@ public class Lure extends GameObject{
 			
 			isSubmerged = true;
 			isCasting = false;
-			System.out.println("submerged!!");
+			if(ConfigData.DEBUG) System.out.println("submerged!!");
 		} else if(getY() > waterLevel && isSubmerged == true) {
-			System.out.println("THIS");
 			isTouchingCliff = false;
 			isSubmerged = false;
 			isAttached = true;
@@ -84,7 +83,6 @@ public class Lure extends GameObject{
 			aRad -= 0.011;
 			r -= pullAmount;
 			
-			System.out.println("R: " + r);
 			this.velX = ((float) (centreX + Math.cos(aRad) * r) - getX());
 			this.velY = ((float) (centreY + Math.sin(aRad) * r) - getY());
 			
@@ -93,7 +91,6 @@ public class Lure extends GameObject{
 		
 		else if(isTouchingCliff) {
 			r -= pullAmount;
-			System.out.println("R: " + r);
 			this.velX = ((float) (centreX + Math.cos(aRad) * r) - getX());
 			this.velY = ((float) (centreY + Math.sin(aRad) * r) - getY());
 		}
@@ -120,7 +117,6 @@ public class Lure extends GameObject{
 			isCasting = false;
 			onScreen = false;
 		} 
-		System.out.println("VEL X: " + velX + ". VEL Y: " + velY);
 		setPosition(getX() + velX * Gdx.graphics.getDeltaTime(), getY() + velY * Gdx.graphics.getDeltaTime());
 	}
 	
