@@ -10,7 +10,7 @@ public class Lure extends GameObject{
 	private boolean isAttached, isCasting, isSubmerged, isTouchingCliff;
 	private float pullAmount;
 	
-	static boolean debug = false;
+	static boolean debug = true;
 	
 	float absX;
 	float absY;
@@ -47,6 +47,13 @@ public class Lure extends GameObject{
 	}
 	
 	public void update() {
+		
+		for(int i = 0; i < game.getFishies().size(); i++) {
+			if(Collider.isColliding(this, game.getFishies().get(i))) {
+				if(debug)	System.out.println("COLLIDING WITH FISH " + i + "!");
+			}
+		}
+		
 		double xDiff = 0;
 		double yDiff = 0;
 		float centreX = fishingRod.getEndX(), centreY = fishingRod.getEndY();

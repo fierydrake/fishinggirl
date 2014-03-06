@@ -26,7 +26,7 @@ public class FishingGirlGame implements ApplicationListener {
 	private List<GameObject> backgroundLayer = new ArrayList<GameObject>();
 	private List<GameObject> baseLayer = new ArrayList<GameObject>();
 	private List<GameObject> foregroundLayer = new ArrayList<GameObject>();
-	private List<GameObject> fishes = new ArrayList<GameObject>();
+	private List<GameObject> fishies = new ArrayList<GameObject>();
  	
 	@Override
 	public void create() {
@@ -50,8 +50,8 @@ public class FishingGirlGame implements ApplicationListener {
 		SmallFish fish1 = new SmallFish(this,cliff.getRight() + 100, cliff.getTop() - 400);
 		LargeFish fish2 = new LargeFish(this,cliff.getRight() + 300, cliff.getTop() - 300);
 		
-		fishes.add(fish1);
-		fishes.add(fish2);
+		fishies.add(fish1);
+		fishies.add(fish2);
 		
 		backgroundLayer.add(background);
 		backgroundLayer.add(water);
@@ -64,8 +64,8 @@ public class FishingGirlGame implements ApplicationListener {
 		foregroundLayer.add(fishingRod);
 		foregroundLayer.add(player);
 		
-		for(int i = 0; i < fishes.size(); i++){
-			foregroundLayer.add(fishes.get(i));
+		for(int i = 0; i < fishies.size(); i++){
+			foregroundLayer.add(fishies.get(i));
 		}
 	}
 	
@@ -75,6 +75,10 @@ public class FishingGirlGame implements ApplicationListener {
 	
 	public Ground getCliff() {
 		return this.cliff;
+	}
+	
+	public List<GameObject> getFishies() {
+		return fishies;
 	}
 
 	@Override
