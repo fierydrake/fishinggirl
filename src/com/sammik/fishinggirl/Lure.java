@@ -2,10 +2,6 @@ package com.sammik.fishinggirl;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Lure extends GameObject{
 	private float velX, velY, forceX, forceY;
@@ -13,6 +9,8 @@ public class Lure extends GameObject{
 	private boolean onScreen;
 	private boolean isAttached, isCasting, isSubmerged, isTouchingCliff;
 	private float pullAmount;
+	
+	static boolean debug = false;
 	
 	float absX;
 	float absY;
@@ -30,7 +28,7 @@ public class Lure extends GameObject{
 		game.assets.texture("largeLure"),
 	};
 	private FishingRod fishingRod;
-	private float waterLevel = FishingGirlGame.WORLD_HEIGHT / 2;
+	private float waterLevel = game.getWater().getTop();
 	
 	
 	public Lure(final FishingGirlGame game, FishingRod fishingRod, LureSize size) {
@@ -64,9 +62,8 @@ public class Lure extends GameObject{
 			
 			isSubmerged = true;
 			isCasting = false;
-			System.out.println("submerged!!");
+			if(debug) System.out.println("submerged!!");
 		} else if(getY() > waterLevel && isSubmerged == true) {
-			System.out.println("THIS");
 			isTouchingCliff = false;
 			isSubmerged = false;
 			isAttached = true;
@@ -84,23 +81,34 @@ public class Lure extends GameObject{
 			aRad -= 0.011;
 			r -= pullAmount;
 			
-			System.out.println("R: " + r);
 			this.velX = ((float) (centreX + Math.cos(aRad) * r) - getX());
 			this.velY = ((float) (centreY + Math.sin(aRad) * r) - getY());
 			
 			onScreen = true;
-		} else if(isTouchingCliff) {
-			r-=pullAmount;
-			System.out.println("R: " + r);
+		} 
+		
+		else if(isTouchingCliff) {
+			r -= pullAmount;
 			this.velX = ((float) (centreX + Math.cos(aRad) * r) - getX());
 			this.velY = ((float) (centreY + Math.sin(aRad) * r) - getY());
 		}
 		
 		
 		if(!isSubmerged)	ApplyGravity();
-		else if(getLeft() < game.getCliff().getRight() && !isTouchingCliff){
+		else if(getLeft() < game.getCliff().getRight() - 50 && !isTouchingCliff) {
 			isTouchingCliff = true;
 			velX = 0; velY = 0;
+			
+			absX = centreX - (getX() + getWidth() / 2);
+			absY = centreY - (getY() + getHeight() / 2);
+			r = (float) Math.sqrt((absX * absX) + (absY * absY));
+			
+//			xDiff = (getX() + getWidth() / 2) - fishingRod.getEndX();
+//			yDiff = (getY() + getHeight() / 2) - fishingRod.getEndY();
+//			aRad = (float) Math.atan2(yDiff, xDiff);
+			aRad += 0.99;
+			
+			setPosition(game.getCliff().getRight() - 50, getY());
 		}
 		
 		if(getX() > FishingGirlGame.WORLD_WIDTH || getY() > FishingGirlGame.WORLD_HEIGHT || getX() < 0 || getY() < 0) {
@@ -112,7 +120,6 @@ public class Lure extends GameObject{
 			isCasting = false;
 			onScreen = false;
 		} 
-		System.out.println("VEL X: " + velX + ". VEL Y: " + velY);
 		setPosition(getX() + velX * Gdx.graphics.getDeltaTime(), getY() + velY * Gdx.graphics.getDeltaTime());
 	}
 	

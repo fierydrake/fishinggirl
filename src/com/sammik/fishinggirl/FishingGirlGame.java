@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -19,6 +20,7 @@ public class FishingGirlGame implements ApplicationListener {
 	private GameObject background;
 	private Ground cliff;
 	private Water water;
+	private Player player; 
 	private FishingRod fishingRod;
 
 	private List<GameObject> backgroundLayer = new ArrayList<GameObject>();
@@ -40,9 +42,10 @@ public class FishingGirlGame implements ApplicationListener {
 		batch = new SpriteBatch();
 	
 		cliff = new Ground(this, assets.texture("cliff"), 0, 0);
-		background = new GameObject(this, assets.texture("background"), 0, cliff.getTop());
-		water = new Water(this, assets.texture("water"), cliff.getRight(), 0);
-		fishingRod = new FishingRod(this, cliff.getRight(), cliff.getTop());
+		background = new GameObject(this, assets.texture("background"), 0, cliff.getTop() - 50);
+		water = new Water(this, assets.texture("water"), cliff.getRight() - 60, -200);
+		fishingRod = new FishingRod(this, cliff.getRight() - 45, cliff.getTop() + 10);
+		player = new Player(this, assets.texture("player"), cliff.getRight() - 80, cliff.getTop());
 		
 		SmallFish fish1 = new SmallFish(this,cliff.getRight() + 100, cliff.getTop() - 400);
 		LargeFish fish2 = new LargeFish(this,cliff.getRight() + 300, cliff.getTop() - 300);
@@ -56,9 +59,10 @@ public class FishingGirlGame implements ApplicationListener {
 		baseLayer.add(new GameObject(this, assets.texture("smallTree"), x, y, 0, 74)); x+=assets.texture("smallTree").getWidth();
 		baseLayer.add(new GameObject(this, assets.texture("largeTree"), x, y, 0, 4)); x+=assets.texture("largeTree").getWidth();
 		baseLayer.add(new GameObject(this, assets.texture("lodge"), x, y, 0, 80)); x+=assets.texture("lodge").getWidth();
-		baseLayer.add(new GameObject(this, assets.texture("house"), x, y, 0, 10)); x+=assets.texture("house").getWidth();
+		baseLayer.add(new GameObject(this, assets.texture("house"), x - 30, y, 0, 10)); x+=assets.texture("house").getWidth();
 		baseLayer.add(cliff);
 		foregroundLayer.add(fishingRod);
+		foregroundLayer.add(player);
 		
 		for(int i = 0; i < fishes.size(); i++){
 			foregroundLayer.add(fishes.get(i));
@@ -112,5 +116,9 @@ public class FishingGirlGame implements ApplicationListener {
 
 	@Override
 	public void resume() {
+	}
+
+	public Camera getCamera() {
+		return this.camera;
 	}
 }
