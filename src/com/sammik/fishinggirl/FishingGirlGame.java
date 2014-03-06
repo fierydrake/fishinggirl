@@ -19,6 +19,7 @@ public class FishingGirlGame implements ApplicationListener {
 	private GameObject background;
 	private Ground cliff;
 	private Water water;
+	private Player player; 
 	private FishingRod fishingRod;
 
 	private List<GameObject> backgroundLayer = new ArrayList<GameObject>();
@@ -29,8 +30,8 @@ public class FishingGirlGame implements ApplicationListener {
 	@Override
 	public void create() {
 		// FIXME LATER: ignore window size for now. Assume it matches world size 
-		float w = Gdx.graphics.getWidth()*2;
-		float h = Gdx.graphics.getHeight()*2;
+		float w = Gdx.graphics.getWidth()*4;
+		float h = Gdx.graphics.getHeight()*4;
 		
 		Texture.setEnforcePotImages(false);
 		
@@ -43,13 +44,13 @@ public class FishingGirlGame implements ApplicationListener {
 		background = new GameObject(this, assets.texture("background"), 0, cliff.getTop());
 		water = new Water(this, assets.texture("water"), cliff.getRight(), 0);
 		fishingRod = new FishingRod(this, cliff.getRight(), cliff.getTop());
+		player = new Player(this, assets.texture("player"), cliff.getRight() - 100, cliff.getTop());
 		
 		SmallFish fish1 = new SmallFish(this,cliff.getRight() + 100, cliff.getTop() - 400);
 		LargeFish fish2 = new LargeFish(this,cliff.getRight() + 300, cliff.getTop() - 300);
 		
 		fishes.add(fish1);
 		fishes.add(fish2);
-		
 		
 		backgroundLayer.add(background);
 		backgroundLayer.add(water);
@@ -60,6 +61,7 @@ public class FishingGirlGame implements ApplicationListener {
 		baseLayer.add(new GameObject(this, assets.texture("house"), x, y, 0, 10)); x+=assets.texture("house").getWidth();
 		baseLayer.add(cliff);
 		foregroundLayer.add(fishingRod);
+		foregroundLayer.add(player);
 		
 		for(int i = 0; i < fishes.size(); i++){
 			foregroundLayer.add(fishes.get(i));

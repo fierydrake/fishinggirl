@@ -27,6 +27,7 @@ public class Assets {
 		load("smallLure", "lureSmall.png");
 		load("mediumLure", "lureMedium.png");
 		load("largeLure", "lureLarge.png");
+		load("player", "bearPurple.png");
 	}
 
 	public Texture texture(final String name) {
