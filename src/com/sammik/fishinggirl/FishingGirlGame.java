@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -42,7 +43,7 @@ public class FishingGirlGame implements ApplicationListener {
 	
 		cliff = new Ground(this, assets.texture("cliff"), 0, 0);
 		background = new GameObject(this, assets.texture("background"), 0, cliff.getTop());
-		water = new Water(this, assets.texture("water"), cliff.getRight(), 0);
+		water = new Water(this, assets.texture("water"), cliff.getRight() - 100, -250);
 		fishingRod = new FishingRod(this, cliff.getRight(), cliff.getTop());
 		player = new Player(this, assets.texture("player"), cliff.getRight() - 100, cliff.getTop());
 		
@@ -111,5 +112,9 @@ public class FishingGirlGame implements ApplicationListener {
 
 	@Override
 	public void resume() {
+	}
+
+	public Camera getCamera() {
+		return this.camera;
 	}
 }

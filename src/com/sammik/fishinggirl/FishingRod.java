@@ -87,6 +87,7 @@ public class FishingRod extends GameObject {
 		ShapeRenderer shapeRenderer = new ShapeRenderer();
 		shapeRenderer.begin(ShapeType.Line);
 		shapeRenderer.setColor(Color.BLACK);
+		shapeRenderer.setProjectionMatrix(game.getCamera().combined);
 		shapeRenderer.line(poleEndX, poleEndY, lure.getX() + lure.getWidth() / 2, lure.getY() + lure.getHeight() / 2);
 		shapeRenderer.end();
 		batch.begin();
@@ -129,9 +130,10 @@ public class FishingRod extends GameObject {
 	private class MyInputProcessor implements InputProcessor {
 	   @Override
 	   public boolean touchDown (int x, int y, int pointer, int button) {
-		   System.out.println(x + ", " + y);
 		   if (button == Input.Buttons.LEFT) {
 			   lure.setPullAmount(5f);
+		   } else {
+			   lure.setPullAmount(0);
 		   }
 		   return false;
 	   }
