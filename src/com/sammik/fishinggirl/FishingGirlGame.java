@@ -42,7 +42,7 @@ public class FishingGirlGame implements ApplicationListener {
 	
 		cliff = new Ground(this, assets.texture("cliff"), 0, 0);
 		background = new GameObject(this, assets.texture("background"), 0, cliff.getTop());
-		water = new Water(this, assets.texture("water"), cliff.getRight(), 0);
+		water = new Water(this, assets.texture("water"), cliff.getRight() - 100, -250);
 		fishingRod = new FishingRod(this, cliff.getRight(), cliff.getTop());
 		
 		SmallFish fish1 = new SmallFish(this,cliff.getRight() + 100, cliff.getTop() - 400);
@@ -50,7 +50,6 @@ public class FishingGirlGame implements ApplicationListener {
 		
 		fishes.add(fish1);
 		fishes.add(fish2);
-		
 		
 		backgroundLayer.add(background);
 		backgroundLayer.add(water);

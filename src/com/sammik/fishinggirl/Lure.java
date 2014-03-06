@@ -1,5 +1,7 @@
 package com.sammik.fishinggirl;
 
+import samsstuff.ConfigData;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -13,6 +15,8 @@ public class Lure extends GameObject{
 	private boolean onScreen;
 	private boolean isAttached, isCasting, isSubmerged, isTouchingCliff;
 	private float pullAmount;
+	
+	static boolean debug = false;
 	
 	float absX;
 	float absY;
@@ -30,7 +34,7 @@ public class Lure extends GameObject{
 		game.assets.texture("largeLure"),
 	};
 	private FishingRod fishingRod;
-	private float waterLevel = FishingGirlGame.WORLD_HEIGHT / 2;
+	private float waterLevel = game.getWater().getTop();
 	
 	
 	public Lure(final FishingGirlGame game, FishingRod fishingRod, LureSize size) {
@@ -64,7 +68,7 @@ public class Lure extends GameObject{
 			
 			isSubmerged = true;
 			isCasting = false;
-			if(ConfigData.DEBUG) System.out.println("submerged!!");
+			if(debug) System.out.println("submerged!!");
 		} else if(getY() > waterLevel && isSubmerged == true) {
 			isTouchingCliff = false;
 			isSubmerged = false;
@@ -97,15 +101,20 @@ public class Lure extends GameObject{
 		
 		
 		if(!isSubmerged)	ApplyGravity();
-		else if(getLeft() < game.getCliff().getRight() + 10 && !isTouchingCliff) {
+		else if(getLeft() < game.getCliff().getRight() - 50 && !isTouchingCliff) {
 			isTouchingCliff = true;
-			
-			xDiff = (getX() + getWidth() / 2) - fishingRod.getEndX();
-			yDiff = (getY() + getHeight() / 2) - fishingRod.getEndY();
-			aRad = (float) Math.atan2(yDiff, xDiff);
-			
 			velX = 0; velY = 0;
-			setPosition(game.getCliff().getRight() + 10, getY());
+			
+			absX = centreX - (getX() + getWidth() / 2);
+			absY = centreY - (getY() + getHeight() / 2);
+			r = (float) Math.sqrt((absX * absX) + (absY * absY));
+			
+//			xDiff = (getX() + getWidth() / 2) - fishingRod.getEndX();
+//			yDiff = (getY() + getHeight() / 2) - fishingRod.getEndY();
+//			aRad = (float) Math.atan2(yDiff, xDiff);
+			aRad += 0.99;
+			
+			setPosition(game.getCliff().getRight() - 50, getY());
 		}
 		
 		if(getX() > FishingGirlGame.WORLD_WIDTH || getY() > FishingGirlGame.WORLD_HEIGHT || getX() < 0 || getY() < 0) {
