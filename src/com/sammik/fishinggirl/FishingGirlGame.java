@@ -31,8 +31,8 @@ public class FishingGirlGame implements ApplicationListener {
 	@Override
 	public void create() {
 		// FIXME LATER: ignore window size for now. Assume it matches world size 
-		float w = Gdx.graphics.getWidth()*4;
-		float h = Gdx.graphics.getHeight()*4;
+		float w = Gdx.graphics.getWidth()*2;
+		float h = Gdx.graphics.getHeight()*2;
 		
 		Texture.setEnforcePotImages(false);
 		
@@ -42,10 +42,10 @@ public class FishingGirlGame implements ApplicationListener {
 		batch = new SpriteBatch();
 	
 		cliff = new Ground(this, assets.texture("cliff"), 0, 0);
-		background = new GameObject(this, assets.texture("background"), 0, cliff.getTop());
-		water = new Water(this, assets.texture("water"), cliff.getRight() - 100, -250);
-		fishingRod = new FishingRod(this, cliff.getRight(), cliff.getTop());
-		player = new Player(this, assets.texture("player"), cliff.getRight() - 100, cliff.getTop());
+		background = new GameObject(this, assets.texture("background"), 0, cliff.getTop() - 50);
+		water = new Water(this, assets.texture("water"), cliff.getRight() - 60, -200);
+		fishingRod = new FishingRod(this, cliff.getRight() - 45, cliff.getTop() + 10);
+		player = new Player(this, assets.texture("player"), cliff.getRight() - 80, cliff.getTop());
 		
 		SmallFish fish1 = new SmallFish(this,cliff.getRight() + 100, cliff.getTop() - 400);
 		LargeFish fish2 = new LargeFish(this,cliff.getRight() + 300, cliff.getTop() - 300);
@@ -59,7 +59,7 @@ public class FishingGirlGame implements ApplicationListener {
 		baseLayer.add(new GameObject(this, assets.texture("smallTree"), x, y, 0, 74)); x+=assets.texture("smallTree").getWidth();
 		baseLayer.add(new GameObject(this, assets.texture("largeTree"), x, y, 0, 4)); x+=assets.texture("largeTree").getWidth();
 		baseLayer.add(new GameObject(this, assets.texture("lodge"), x, y, 0, 80)); x+=assets.texture("lodge").getWidth();
-		baseLayer.add(new GameObject(this, assets.texture("house"), x, y, 0, 10)); x+=assets.texture("house").getWidth();
+		baseLayer.add(new GameObject(this, assets.texture("house"), x - 30, y, 0, 10)); x+=assets.texture("house").getWidth();
 		baseLayer.add(cliff);
 		foregroundLayer.add(fishingRod);
 		foregroundLayer.add(player);
