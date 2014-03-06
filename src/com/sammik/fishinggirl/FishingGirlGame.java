@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -97,5 +98,9 @@ public class FishingGirlGame implements ApplicationListener {
 
 	@Override
 	public void resume() {
+	}
+
+	public Camera getCamera() {
+		return this.camera;
 	}
 }

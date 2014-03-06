@@ -89,8 +89,10 @@ public class Lure extends GameObject{
 			this.velY = ((float) (centreY + Math.sin(aRad) * r) - getY());
 			
 			onScreen = true;
-		} else if(isTouchingCliff) {
-			r-=pullAmount;
+		} 
+		
+		else if(isTouchingCliff) {
+			r -= pullAmount;
 			System.out.println("R: " + r);
 			this.velX = ((float) (centreX + Math.cos(aRad) * r) - getX());
 			this.velY = ((float) (centreY + Math.sin(aRad) * r) - getY());
@@ -98,9 +100,15 @@ public class Lure extends GameObject{
 		
 		
 		if(!isSubmerged)	ApplyGravity();
-		else if(getLeft() < game.getCliff().getRight() && !isTouchingCliff){
+		else if(getLeft() < game.getCliff().getRight() + 10 && !isTouchingCliff) {
 			isTouchingCliff = true;
+			
+			xDiff = (getX() + getWidth() / 2) - fishingRod.getEndX();
+			yDiff = (getY() + getHeight() / 2) - fishingRod.getEndY();
+			aRad = (float) Math.atan2(yDiff, xDiff);
+			
 			velX = 0; velY = 0;
+			setPosition(game.getCliff().getRight() + 10, getY());
 		}
 		
 		if(getX() > FishingGirlGame.WORLD_WIDTH || getY() > FishingGirlGame.WORLD_HEIGHT || getX() < 0 || getY() < 0) {
