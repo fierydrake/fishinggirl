@@ -3,7 +3,7 @@ package com.sammik.fishinggirl;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
-public class MediumFish extends Fish {
+public class MediumFish extends Fish{
 
 	public MediumFish(FishingGirlGame fgg,final float x, float y){
 		

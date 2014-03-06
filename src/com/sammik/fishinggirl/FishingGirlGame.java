@@ -24,7 +24,7 @@ public class FishingGirlGame implements ApplicationListener {
 	private List<GameObject> backgroundLayer = new ArrayList<GameObject>();
 	private List<GameObject> baseLayer = new ArrayList<GameObject>();
 	private List<GameObject> foregroundLayer = new ArrayList<GameObject>();
-	private List<GameObject> fishes = new ArrayList<GameObject>();
+	private List<Fish> fishes = new ArrayList<Fish>();
  	
 	@Override
 	public void create() {
@@ -49,7 +49,6 @@ public class FishingGirlGame implements ApplicationListener {
 		
 		fishes.add(fish1);
 		fishes.add(fish2);
-		
 		
 		backgroundLayer.add(background);
 		backgroundLayer.add(water);
@@ -89,6 +88,10 @@ public class FishingGirlGame implements ApplicationListener {
 		
 		// logic
 		fishingRod.update();
+		
+		for(int i = 0; i < fishes.size(); i++){
+			fishes.get(i).update();
+		}
 		
 		// render
 		batch.begin();
