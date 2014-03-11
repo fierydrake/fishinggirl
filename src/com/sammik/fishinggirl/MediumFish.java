@@ -11,4 +11,8 @@ public class MediumFish extends Fish{
 	
 	}
 	
+	public void update(){
+		super.update();
+	}
+	
 }
