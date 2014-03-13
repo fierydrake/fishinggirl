@@ -49,9 +49,10 @@ public class FishingGirlGame implements ApplicationListener {
 		
 		assets = new Assets();
 		camera = new OrthographicCamera(w, h);
-		camera.combined.translate(-w/2f, -2048+h/2, 0);
+		camera.translate(-w/2f, h/2f - 2048);
+		camera.update();
 		batch = new SpriteBatch();
-	
+
 		cliff = new Ground(this, assets.texture("cliff"), 0, 0);
 		background = new GameObject(this, assets.texture("background"), 0, cliff.getTop() - 50);
 		water = new Water(this, assets.texture("water"), cliff.getRight() - 60, -200);
