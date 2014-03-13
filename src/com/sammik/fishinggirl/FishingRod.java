@@ -25,9 +25,6 @@ public class FishingRod extends GameObject {
 	public FishingRod(final FishingGirlGame game, final float x, final float y) {
 		super(game, new TextureRegion(new Texture(Gdx.files.local("fishingGirl/fishingRod1.png")), 0, 0, 197, 15), x, y);
 		
-		MyInputProcessor inputProcessor = new MyInputProcessor();
-		Gdx.input.setInputProcessor(inputProcessor);
-		
 		lure = new Lure(game, this, Lure.LureSize.SMALL);
 
 		setOrigin(0, getHeight() / 2);
@@ -126,72 +123,12 @@ public class FishingRod extends GameObject {
 	public float getEndY() {
 		return this.poleEndY;
 	}
+	
+	public Lure getLure() {
+		return this.lure;
+	}
 
-	private class MyInputProcessor implements InputProcessor {
-	   @Override
-	   public boolean touchDown (int x, int y, int pointer, int button) {
-		   if (button == Input.Buttons.LEFT) {
-			   lure.setPullAmount(5f);
-		   } else {
-			   lure.setPullAmount(0);
-		   }
-		   return false;
-	   }
-	
-		@Override
-		public boolean keyDown(int keycode) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-	
-		@Override
-		public boolean keyUp(int keycode) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-	
-		@Override
-		public boolean keyTyped(char character) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-	
-		@Override
-		public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-			// TODO Auto-generated method stub
-			if (button == Input.Buttons.LEFT) {
-				lure.setPullAmount(0);
-		          if(pulling) {
-		        	  Cast();
-		        	  casting = true;
-		        	  pulling = false;
-		          }
-		          else if(lure.isAttached()){
-		        	  pulling = true;
-		          } else {
-		        	  
-		          }
-		          return true;
-		      }
-			return false;
-		}
-
-		@Override
-		public boolean touchDragged(int screenX, int screenY, int pointer) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-	
-		@Override
-		public boolean mouseMoved(int screenX, int screenY) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-	
-		@Override
-		public boolean scrolled(int amount) {
-			// TODO Auto-generated method stub
-			return false;
-		}
+	public void setCasting(boolean b) {
+		this.casting = b;
 	}
 }

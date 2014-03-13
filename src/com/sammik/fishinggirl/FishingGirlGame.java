@@ -5,11 +5,16 @@ import java.util.List;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.sammik.fishinggirl.shop.Shop;
+import com.sammik.fishinggirl.shop.ShopButton;
 
 public class FishingGirlGame implements ApplicationListener {
 	public static final float WORLD_WIDTH = 2048, WORLD_HEIGHT = 2048;
@@ -27,6 +32,9 @@ public class FishingGirlGame implements ApplicationListener {
 	private List<GameObject> baseLayer = new ArrayList<GameObject>();
 	private List<GameObject> foregroundLayer = new ArrayList<GameObject>();
 	private List<Fish> fishies = new ArrayList<Fish>();
+	
+	private ShopButton shopButton;
+	private Shop shop;
  	
 	@Override
 	public void create() {
@@ -35,6 +43,9 @@ public class FishingGirlGame implements ApplicationListener {
 		float h = Gdx.graphics.getHeight()*2;
 		
 		Texture.setEnforcePotImages(false);
+		
+		MyInputProcessor inputProcessor = new MyInputProcessor();
+		Gdx.input.setInputProcessor(inputProcessor);
 		
 		assets = new Assets();
 		camera = new OrthographicCamera(w, h);
@@ -67,6 +78,10 @@ public class FishingGirlGame implements ApplicationListener {
 		for(int i = 0; i < fishies.size(); i++){
 			foregroundLayer.add(fishies.get(i));
 		}
+		
+		//set up shop (guffaw)
+		shopButton = new ShopButton(this, assets.texture("shopButton"), water.getCenterX(), water.getTop(), new Shop(this, assets.texture("shop"), 0, 0));
+		foregroundLayer.add(shopButton);
 	}
 	
 	public Water getWater() {
@@ -96,7 +111,6 @@ public class FishingGirlGame implements ApplicationListener {
 		
 		// logic
 		fishingRod.update();
-		
 		for(int i = 0; i < fishies.size(); i++){
 			fishies.get(i).update();
 		}
@@ -125,4 +139,77 @@ public class FishingGirlGame implements ApplicationListener {
 	public Camera getCamera() {
 		return this.camera;
 	}
+	
+	private class MyInputProcessor implements InputProcessor {
+		   @Override
+		   public boolean touchDown (int x, int y, int pointer, int button) {
+			   if (button == Input.Buttons.LEFT) {
+				   fishingRod.getLure().setPullAmount(5f);
+			   } else {
+				   fishingRod.getLure().setPullAmount(0);
+			   }
+			   return false;
+		   }
+		
+			@Override
+			public boolean keyDown(int keycode) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		
+			@Override
+			public boolean keyUp(int keycode) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		
+			@Override
+			public boolean keyTyped(char character) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		
+			@Override
+			public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+				// TODO Auto-generated method stub
+				if (button == Input.Buttons.LEFT) {
+					if(Collider.isColliding(new Vector2(screenX, screenY), shopButton)) {
+						System.out.println("Clicked on shop!");
+						shopButton.setShopActive(true);
+					} else {
+						fishingRod.getLure().setPullAmount(0);
+				          if(fishingRod.isPulling()) {
+				        	  fishingRod.Cast();
+				        	  fishingRod.setCasting(true);
+				        	  fishingRod.setPulling(false);
+				          }
+				          else if(fishingRod.getLure().isAttached()){
+				        	  fishingRod.setPulling(true);
+				          } else {
+				        	  
+				          }
+				          return true;
+					}
+			      }
+				return false;
+			}
+
+			@Override
+			public boolean touchDragged(int screenX, int screenY, int pointer) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		
+			@Override
+			public boolean mouseMoved(int screenX, int screenY) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		
+			@Override
+			public boolean scrolled(int amount) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		}
 }
