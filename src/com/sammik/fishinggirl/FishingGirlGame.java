@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.sammik.fishinggirl.shop.Shop;
 import com.sammik.fishinggirl.shop.ShopButton;
 
@@ -49,6 +50,8 @@ public class FishingGirlGame implements ApplicationListener {
 		
 		assets = new Assets();
 		camera = new OrthographicCamera(w, h);
+		camera.position.x += -w/2f;
+		camera.position.y += -2048 + h/2f;
 		camera.combined.translate(-w/2f, -2048+h/2, 0);
 		batch = new SpriteBatch();
 	
@@ -108,7 +111,7 @@ public class FishingGirlGame implements ApplicationListener {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		batch.setProjectionMatrix(camera.combined);
-		
+		shopButton.update(foregroundLayer);
 		// logic
 		fishingRod.update();
 		for(int i = 0; i < fishies.size(); i++){
@@ -173,6 +176,10 @@ public class FishingGirlGame implements ApplicationListener {
 			public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 				// TODO Auto-generated method stub
 				if (button == Input.Buttons.LEFT) {
+					Vector3 v = new Vector3(screenX, screenY, 1);
+					camera.unproject(v);
+					screenX = (int) (v.x - camera.position.x);
+					screenY = (int) (v.y - camera.position.y);
 					if(Collider.isColliding(new Vector2(screenX, screenY), shopButton)) {
 						System.out.println("Clicked on shop!");
 						shopButton.setShopActive(true);
