@@ -26,9 +26,9 @@ public class ShopButton extends GameObject {
 		return this.isShopActive;
 	}
 
-	public void update(List<GameObject> foregroundLayer) {
+	public void update() {
 		if(isShopActive) {
-//			foregroundLayer.add(this.shop);
+//			game.spawn(this.shop);
 //			System.out.println(shop.getX() + ", " + shop.getY());
 		}
 
