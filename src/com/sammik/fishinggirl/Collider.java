@@ -5,34 +5,18 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Collider {
 	public static boolean isColliding(Rectangle rect, GameObject object) {
-		if(object.getBoundingRectangle().overlaps(rect)) {
-			return true;
-		} else {
-			return false;
-		}
+		return object.getBoundingRectangle().overlaps(rect);
 	}
 	
 	public static boolean isColliding(Rectangle rect1, Rectangle rect2) {
-		if(rect1.contains(rect2)) {
-			return true;
-		} else {
-			return false;
-		}
+		return rect1.overlaps(rect2);
 	}
 	
 	public static boolean isColliding(GameObject object1, GameObject object2) {
-		if(object2.getBoundingRectangle().contains(object1.getBoundingRectangle())) {
-			return true;
-		} else {
-			return false;
-		}
+		return object1.getBoundingRectangle().overlaps(object2.getBoundingRectangle());
 	}
 	
 	public static boolean isColliding(Vector2 v, GameObject object2) {
-		if(object2.getBoundingRectangle().contains(v.x, v.y)) {
-			return true;
-		} else {
-			return false;
-		}
+		return object2.getBoundingRectangle().contains(v.x, v.y);
 	}
 }
