@@ -49,7 +49,7 @@ public class FishingGirlGame implements ApplicationListener {
 		
 		assets = new Assets();
 		camera = new OrthographicCamera(w, h);
-		camera.translate(-w/2f, h/2f - 2048);
+		camera.translate(w/2f, -h/2f + 2048);
 		camera.update();
 		batch = new SpriteBatch();
 
