@@ -11,4 +11,10 @@ public class LargeFish extends Fish{
 	
 	}
 	
+	public void update(){
+		super.update();
+		
+		
+	}
+	
 }

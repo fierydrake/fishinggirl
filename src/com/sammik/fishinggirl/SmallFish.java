@@ -12,5 +12,9 @@ public class SmallFish extends Fish{
 		super(fgg,new Texture(Gdx.files.local("fishingGirl/fishSmall1.png")), x, y);
 	
 	}
+	
+	public void update(){
+		super.update();
+	}
 
 }
