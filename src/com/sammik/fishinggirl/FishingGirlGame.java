@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.sammik.fishinggirl.shop.Shop;
 import com.sammik.fishinggirl.shop.ShopButton;
 
@@ -39,8 +40,8 @@ public class FishingGirlGame implements ApplicationListener {
 	@Override
 	public void create() {
 		// FIXME LATER: ignore window size for now. Assume it matches world size 
-		float w = Gdx.graphics.getWidth()*2;
-		float h = Gdx.graphics.getHeight()*2;
+		float w = Gdx.graphics.getWidth()*4;
+		float h = Gdx.graphics.getHeight()*4;
 		
 		Texture.setEnforcePotImages(false);
 		
@@ -109,7 +110,7 @@ public class FishingGirlGame implements ApplicationListener {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		batch.setProjectionMatrix(camera.combined);
-		
+		shopButton.update(foregroundLayer);
 		// logic
 		fishingRod.update();
 		for(int i = 0; i < fishies.size(); i++){
@@ -174,6 +175,10 @@ public class FishingGirlGame implements ApplicationListener {
 			public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 				// TODO Auto-generated method stub
 				if (button == Input.Buttons.LEFT) {
+					Vector3 v = new Vector3(screenX, screenY, 1);
+					camera.unproject(v);
+					screenX = (int) (v.x - camera.position.x);
+					screenY = (int) (v.y - camera.position.y);
 					if(Collider.isColliding(new Vector2(screenX, screenY), shopButton)) {
 						System.out.println("Clicked on shop!");
 						shopButton.setShopActive(true);

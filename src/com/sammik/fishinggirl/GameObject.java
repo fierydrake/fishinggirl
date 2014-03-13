@@ -57,5 +57,10 @@ public class GameObject extends Sprite {
 		final Rectangle bounds = getBoundingRectangle();
 		return bounds.x + bounds.width / 2f;
 	}
+	
+	public float getCenterY() {
+		final Rectangle bounds = getBoundingRectangle();
+		return bounds.y + bounds.height / 2f;
+	}
 
 }

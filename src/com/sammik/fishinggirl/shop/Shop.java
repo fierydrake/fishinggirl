@@ -16,8 +16,4 @@ public class Shop extends GameObject{
 			super.draw(batch);
 		}
 	}
-	
-	public void setShowing(boolean b) {
-		this.showing = b;
-	}
 }
