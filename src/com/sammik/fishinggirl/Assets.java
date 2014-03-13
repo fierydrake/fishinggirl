@@ -28,6 +28,8 @@ public class Assets {
 		load("mediumLure", "lureMedium.png");
 		load("largeLure", "lureLarge.png");
 		load("player", "bearPurple.png");
+		load("shopButton", "storeContainer.png");
+		load("shop", "purchasedialog.png");
 	}
 
 	public Texture texture(final String name) {
