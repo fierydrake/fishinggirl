@@ -7,13 +7,12 @@ import com.sammik.fishinggirl.GameObject;
 
 public class Shop extends GameObject{
 	private boolean showing = false;
+	private List<ShopItem> items = new ArrayList<ShopItem>();
+	private PurchaseButton = new PurchaseButton();
 	public Shop(FishingGirlGame game, Texture texture, float x, float y) {
 		super(game, texture, x, y);
 	}
 	
-	public void draw(SpriteBatch batch) {
-		if(showing) {
-			super.draw(batch);
-		}
-	}
+	
+
 }
