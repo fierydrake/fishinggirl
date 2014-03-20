@@ -1,20 +1,11 @@
 package com.sammik.fishinggirl;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 public class LargeFish extends Fish{
 
-	public LargeFish(FishingGirlGame fgg,final float x, float y){
-		
-		super(fgg,new Texture(Gdx.files.local("fishingGirl/fishLarge1.png")), x, y);
-	
+	public LargeFish(final FishingGirlGame game, final Texture texture, final float x, float y){
+		super(game, texture, x, y);
 	}
-	
-	public void update(){
-		super.update();
-		
-		
-	}
-	
+
 }

@@ -19,6 +19,10 @@ import com.sammik.fishinggirl.shop.ShopButton;
 
 public class FishingGirlGame implements ApplicationListener {
 	public static final float WORLD_WIDTH = 2048, WORLD_HEIGHT = 2048;
+	public static final int MAX_FISH = 40;
+	public enum Layer {
+		BG, FG, BASE
+	}
 	
 	Assets assets;
 	private OrthographicCamera camera;
@@ -40,8 +44,8 @@ public class FishingGirlGame implements ApplicationListener {
 	@Override
 	public void create() {
 		// FIXME LATER: ignore window size for now. Assume it matches world size 
-		float w = Gdx.graphics.getWidth()*2;
-		float h = Gdx.graphics.getHeight()*2;
+		float w = Gdx.graphics.getWidth()*4;
+		float h = Gdx.graphics.getHeight()*4;
 		
 		Texture.setEnforcePotImages(false);
 		
@@ -60,11 +64,11 @@ public class FishingGirlGame implements ApplicationListener {
 		fishingRod = new FishingRod(this, cliff.getRight() - 45, cliff.getTop() + 10);
 		player = new Player(this, assets.texture("player"), cliff.getRight() - 80, cliff.getTop());
 		
-		SmallFish fish1 = new SmallFish(this,cliff.getRight() + 100, cliff.getTop() - 400);
-		LargeFish fish2 = new LargeFish(this,cliff.getRight() + 300, cliff.getTop() - 300);
-		
-		fishies.add(fish1);
-		fishies.add(fish2);
+		for (int i=0; i < MAX_FISH; i++) {
+			spawn(Fish.randomFish(this, cliff.getRight(), water.getRight(), water.getBottom(), water.getTop()));
+		}
+//		fishies.add(new SmallFish(this, assets.texture("smallFish1"), cliff.getRight() + 100, cliff.getTop() - 400));
+//		fishies.add(new LargeFish(this,cliff.getRight() + 300, cliff.getTop() - 300));
 		
 		backgroundLayer.add(background);
 		backgroundLayer.add(water);
@@ -76,14 +80,27 @@ public class FishingGirlGame implements ApplicationListener {
 		baseLayer.add(cliff);
 		foregroundLayer.add(fishingRod);
 		foregroundLayer.add(player);
-		
-		for(int i = 0; i < fishies.size(); i++){
-			foregroundLayer.add(fishies.get(i));
-		}
+
+		for (final Fish f : fishies) { foregroundLayer.add(f); }
 		
 		//set up shop (guffaw)
 		shopButton = new ShopButton(this, assets.texture("shopButton"), water.getCenterX(), water.getTop(), new Shop(this, assets.texture("shop"), 0, 0));
 		foregroundLayer.add(shopButton);
+	}
+	
+	public void spawn(final GameObject obj, final Layer layer) {
+		if (obj == null) return;
+		switch (layer) {
+		case BG: backgroundLayer.add(obj);
+		case BASE: baseLayer.add(obj);
+		case FG: foregroundLayer.add(obj);
+		default:
+			foregroundLayer.add(obj);
+		}
+	}
+	
+	public void spawn(final GameObject obj) {
+		spawn(obj, Layer.FG);
 	}
 	
 	public Water getWater() {
