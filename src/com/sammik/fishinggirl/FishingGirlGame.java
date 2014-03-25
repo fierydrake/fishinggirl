@@ -16,6 +16,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.sammik.fishinggirl.shop.Shop;
 import com.sammik.fishinggirl.shop.ShopButton;
+import com.sammik.fishinggirl.shop.ShopConfig;
+import com.sammik.fishinggirl.shop.ShopItem;
 
 public class FishingGirlGame implements ApplicationListener {
 	public static final float WORLD_WIDTH = 2048, WORLD_HEIGHT = 2048;
@@ -33,6 +35,7 @@ public class FishingGirlGame implements ApplicationListener {
 	private List<GameObject> baseLayer = new ArrayList<GameObject>();
 	private List<GameObject> foregroundLayer = new ArrayList<GameObject>();
 	private List<Fish> fishies = new ArrayList<Fish>();
+	private List<ShopItem> shopItems = new ArrayList<ShopItem>();
 	
 	private ShopButton shopButton;
 	private Shop shop;
@@ -81,8 +84,17 @@ public class FishingGirlGame implements ApplicationListener {
 			foregroundLayer.add(fishies.get(i));
 		}
 		
+		shopItems.add(new ShopItem(this, assets.texture("fishingRod"), ShopConfig.SILVER_ROD, x, y));
+//		shopItems.add(new ShopItem(this, assets.texture(""), ShopConfig.GOLD_ROD, x, y));
+//		shopItems.add(new ShopItem(this, assets.texture(""), ShopConfig.LEGENDARY_ROD, x, y));
+		shopItems.add(new ShopItem(this, assets.texture("mediumLure"), ShopConfig.MEDIUM_LURE, x, y));
+//		shopItems.add(new ShopItem(this, assets.texture("largeLure"), ShopConfig.LARGE_LURE, x, y));
+		shopItems.add(new ShopItem(this, assets.texture("bombLure"), ShopConfig.BOMB_LURE, x, y));
+		
 		//set up shop (guffaw)
-		shopButton = new ShopButton(this, assets.texture("shopButton"), water.getCenterX(), water.getTop(), new Shop(this, assets.texture("shop"), 0, 0));
+		shop = new Shop(this, shopItems, assets.texture("shop"), 0, 0);
+		shop.printShopItems();
+		shopButton = new ShopButton(this, assets.texture("shopButton"), water.getCenterX(), water.getTop(), shop);
 		foregroundLayer.add(shopButton);
 	}
 	
@@ -96,6 +108,10 @@ public class FishingGirlGame implements ApplicationListener {
 	
 	public List<Fish> getFishies() {
 		return fishies;
+	}
+	
+	public void addToForegroundLayer(GameObject o) {
+		this.foregroundLayer.add(o);
 	}
 
 	@Override

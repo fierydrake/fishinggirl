@@ -3,11 +3,7 @@ package com.sammik.fishinggirl.shop;
 import java.util.HashMap;
 
 public class ShopConfig {
-	private int numOfBombLures;
-	private RodLevel rodLevel;
-	private LureLevel lureLevel;
-	
-	public final int SILVER_ROD = 1, GOLD_ROD = 2, LEGENDARY_ROD = 3, MEDIUM_LURE = 4, LARGE_LURE = 5, BOMB_LURE = 6;
+	public static final int SILVER_ROD = 1, GOLD_ROD = 2, LEGENDARY_ROD = 3, MEDIUM_LURE = 4, LARGE_LURE = 5, BOMB_LURE = 6;
 	
 	public static String getDescription(int item) {
 		switch(item) {
@@ -28,34 +24,22 @@ public class ShopConfig {
 		}
 	}
 	
-	public enum RodLevel {
-		BRONZE, SILVER, GOLD, LEGENDARY
-	}
-	
-	public enum LureLevel {
-		SMALL, MEDIUM, LARGE
-	}
-	
-	public ShopConfig() {
-		numOfBombLures = 0;
-		
-		rodLevel = RodLevel.BRONZE;
-		lureLevel = LureLevel.SMALL;
-	}
-	
-	public RodLevel getRodLevel() {
-		return this.rodLevel;
-	}
-	
-	public void setRodLevel(RodLevel level) {
-		this.rodLevel = level;
-	}
-	
-	public LureLevel getLureLevel() {
-		return this.lureLevel;
-	}
-	
-	public void setLureLevel(LureLevel level) {
-		this.lureLevel = level;
+	public static int getPrice(int item) {
+		switch(item) {
+		case SILVER_ROD:
+			return 2000;
+		case GOLD_ROD:
+			return 4000;
+		case LEGENDARY_ROD:
+			return 6000;
+		case MEDIUM_LURE:
+			return 1500;
+		case LARGE_LURE:
+			return 4500;
+		case BOMB_LURE:
+			return 500;
+		default:
+			return 0;
+		}
 	}
 }

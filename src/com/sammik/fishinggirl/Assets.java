@@ -30,6 +30,7 @@ public class Assets {
 		load("player", "bearPurple.png");
 		load("shopButton", "storeContainer.png");
 		load("shop", "purchasedialog.png");
+		load("bombLure", "lureBomb.png");
 	}
 
 	public Texture texture(final String name) {
