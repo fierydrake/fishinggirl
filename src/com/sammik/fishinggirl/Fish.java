@@ -31,8 +31,10 @@ public class Fish extends GameObject{
 	
 	public static Fish randomFish(final FishingGirlGame game, final float minX, final float maxX, final float minY, final float maxY) {
 		final Type type = randomType();
-		final float x = Util.randomBetween(minX, maxX), y = Util.randomBetween(minY, maxY);
-		return fish(game, type, x, y);
+		final Fish fish = fish(game, type, minX, minY);
+		final float x = Util.randomBetween(minX, maxX-fish.getWidth()), y = Util.randomBetween(minY, maxY-fish.getHeight());
+		fish.setPosition(x, y);
+		return fish;
 	}
 	
 	public static Fish fish(FishingGirlGame game, Type type, final float x, final float y) {
