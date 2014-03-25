@@ -44,8 +44,8 @@ public class FishingGirlGame implements ApplicationListener {
 	@Override
 	public void create() {
 		// FIXME LATER: ignore window size for now. Assume it matches world size 
-		float w = Gdx.graphics.getWidth()*4;
-		float h = Gdx.graphics.getHeight()*4;
+		float w = Gdx.graphics.getWidth()*2;
+		float h = Gdx.graphics.getHeight()*2;
 		
 		Texture.setEnforcePotImages(false);
 		
@@ -60,15 +60,16 @@ public class FishingGirlGame implements ApplicationListener {
 
 		cliff = new Ground(this, assets.texture("cliff"), 0, 0);
 		background = new GameObject(this, assets.texture("background"), 0, cliff.getTop() - 50);
-		water = new Water(this, assets.texture("water"), cliff.getRight() - 60, -200);
+		final Texture waterTexture = assets.texture("water");
+		water = new Water(this, waterTexture, cliff.getRight() - 60, -200, waterTexture.getWidth()*2f, waterTexture.getHeight());
 		fishingRod = new FishingRod(this, cliff.getRight() - 45, cliff.getTop() + 10);
 		player = new Player(this, assets.texture("player"), cliff.getRight() - 80, cliff.getTop());
 		
 		for (int i=0; i < MAX_FISH; i++) {
-			spawn(Fish.randomFish(this, cliff.getRight(), water.getRight(), water.getBottom(), water.getTop()));
+			final Fish fishie = Fish.randomFish(this, cliff.getRight(), water.getRight(), water.getBottom(), water.getTop()); 
+			fishies.add(fishie);
+			spawn(fishie);
 		}
-//		fishies.add(new SmallFish(this, assets.texture("smallFish1"), cliff.getRight() + 100, cliff.getTop() - 400));
-//		fishies.add(new LargeFish(this,cliff.getRight() + 300, cliff.getTop() - 300));
 		
 		backgroundLayer.add(background);
 		backgroundLayer.add(water);
@@ -81,8 +82,6 @@ public class FishingGirlGame implements ApplicationListener {
 		foregroundLayer.add(fishingRod);
 		foregroundLayer.add(player);
 
-		for (final Fish f : fishies) { foregroundLayer.add(f); }
-		
 		//set up shop (guffaw)
 		shopButton = new ShopButton(this, assets.texture("shopButton"), water.getCenterX(), water.getTop(), new Shop(this, assets.texture("shop"), 0, 0));
 		foregroundLayer.add(shopButton);
@@ -131,8 +130,8 @@ public class FishingGirlGame implements ApplicationListener {
 		// logic
 		shopButton.update();
 		fishingRod.update();
-		for(int i = 0; i < fishies.size(); i++){
-			fishies.get(i).update();
+		for (final Fish fishie : fishies) {
+			fishie.update();
 		}
 		
 		// render
