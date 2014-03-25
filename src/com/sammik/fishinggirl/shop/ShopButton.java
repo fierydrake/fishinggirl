@@ -1,9 +1,7 @@
 package com.sammik.fishinggirl.shop;
 
-import java.util.List;
-
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.sammik.fishinggirl.FishingGirlGame;
 import com.sammik.fishinggirl.GameObject;
 
@@ -20,6 +18,13 @@ public class ShopButton extends GameObject {
 	public void setShopActive(boolean b) {
 		isShopActive = b;
 		game.addToForegroundLayer(this.shop);
+		ShopItem currentItem = null;
+		for(int i = 0; i < this.shop.getShopItems().size(); i++) {
+			currentItem = this.shop.getShopItems().get(i);
+			Vector2 vec = this.shop.calculatePosInShop(i, 2, 2);
+			currentItem.setPosition(vec.x, vec.y);
+			game.addToForegroundLayer(currentItem);
+		}
 	}
 	
 	public boolean getShopActive() {
@@ -29,7 +34,6 @@ public class ShopButton extends GameObject {
 	public void update() {
 		if(isShopActive) {
 //			game.spawn(this.shop);
-			System.out.println(shop.getX() + ", " + shop.getY());
 		}
 	}
 }
