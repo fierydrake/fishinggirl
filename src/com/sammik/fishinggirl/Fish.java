@@ -2,35 +2,46 @@ package com.sammik.fishinggirl;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Fish extends GameObject{
-	
-	private float x = 0.0f;
-	private float y = 0.0f;
+	public enum Type {
+		SMALL, MEDIUM, LARGE
+	}
 	private float speed = 30.0f;
 
 	public Fish(FishingGirlGame game, Texture texture, float x, float y) {
 		super(game, texture, x, y);
-		
-		this.x = x;
-		this.y = y;
 	}
 	
 	public void update(){
-		
 		if (super.getRight() <= game.getWater().getRight()){
-			x += Gdx.graphics.getDeltaTime() * speed;
+			setX(getX() + Gdx.graphics.getDeltaTime() * speed);
 		}
 		else if(super.getLeft() >= game.getCliff().getRight()){
-			x -= Gdx.graphics.getDeltaTime() * speed;
+			setX(getX() - Gdx.graphics.getDeltaTime() * speed);
 		}
-		
-		setPosition(x, y);
 	}
 	
-	public void draw(SpriteBatch batch){
-		super.draw(batch);
+	public static Type randomType() {
+		final double random = Math.random();
+		if (random < 0.1) return Type.LARGE;
+		if (random < 0.3) return Type.MEDIUM;
+		return Type.SMALL;
 	}
-
+	
+	public static Fish randomFish(final FishingGirlGame game, final float minX, final float maxX, final float minY, final float maxY) {
+		final Type type = randomType();
+		final float x = Util.randomBetween(minX, maxX), y = Util.randomBetween(minY, maxY);
+		return fish(game, type, x, y);
+	}
+	
+	public static Fish fish(FishingGirlGame game, Type type, final float x, final float y) {
+		switch (type) {
+		case SMALL: return new SmallFish(game, game.assets.randomTextureStartingWith("smallFish"), x, y);
+		case MEDIUM: return new MediumFish(game, game.assets.randomTextureStartingWith("mediumFish"), x, y);
+		case LARGE: return new LargeFish(game, game.assets.randomTextureStartingWith("largeFish"), x, y);
+		default:
+			return null;
+		}
+	}
 }
