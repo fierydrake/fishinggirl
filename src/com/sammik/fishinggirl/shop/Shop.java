@@ -3,7 +3,11 @@ package com.sammik.fishinggirl.shop;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sammik.fishinggirl.FishingGirlGame;
@@ -29,26 +33,33 @@ public class Shop extends GameObject{
 		return shopItems;
 	}
 	
-	public Vector2 calculatePosInShop(int i, int maxCols, int maxRows) {
+	private Vector2 calculatePosInShop(int i, int maxCols, int maxRows) {
 		Rectangle rect = getSpace();
-		int count = 0;
-		for(int j = 0; j < maxCols; j++) {
-			for(int h = 0; h < maxRows; h++) {
-				count++;
-				if(count == i) { 
-					System.out.println("SHOP: X: " + getX() + " Y: " + getY());
-					System.out.println("RECT: X: " + rect.getX() + " Y: " + rect.getY());
-					return new Vector2(rect.getX() + rect.getWidth() / maxCols * (h + 1), rect.getY() + rect.getHeight() / maxRows * (j + 1));
-				}
-			}
-		}
 		
-		return new Vector2(0, 0);
+		float cellWidth = rect.getWidth() / maxCols;
+		float cellHeight = rect.getHeight() / maxRows;
+		
+		float cellCentreX = rect.getX() + (i % maxCols) * cellWidth + (cellWidth / 2f);
+		float cellCentreY = rect.getY() + rect.getHeight() - (1 + i/maxRows) * cellHeight + (cellHeight/ 2f);
+		
+		return new Vector2(cellCentreX, cellCentreY);
 	}
 	
 	private Rectangle getSpace() {
 		float top = getTop() - 64, bottom = getBottom() + 95;
 		float left = getLeft();
-		return new Rectangle(bottom, left, getWidth(), top - bottom);
+		return new Rectangle(left, bottom, getWidth(), top - bottom);
+	}
+
+	public void open(float f, float g) {
+		game.addToForegroundLayer(this);
+		setPosition(f, g);
+		ShopItem currentItem = null;
+		for(int i = 0; i < shopItems.size(); i++) {
+			currentItem = shopItems.get(i);
+			Vector2 vec = calculatePosInShop(i, 2, 2);
+			currentItem.setPosition(vec.x - currentItem.getWidth() / 2f, vec.y - currentItem.getHeight() / 2f);
+			game.addToForegroundLayer(currentItem);
+		}
 	}
 }

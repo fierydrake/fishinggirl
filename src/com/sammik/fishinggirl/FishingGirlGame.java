@@ -145,7 +145,6 @@ public class FishingGirlGame implements ApplicationListener {
 		batch.setProjectionMatrix(camera.combined);
 
 		// logic
-		shopButton.update();
 		fishingRod.update();
 		for(int i = 0; i < fishies.size(); i++){
 			fishies.get(i).update();
@@ -212,7 +211,7 @@ public class FishingGirlGame implements ApplicationListener {
 					camera.unproject(v);
 					if(Collider.isColliding(new Vector2(v.x, v.y), shopButton)) {
 						System.out.println("Clicked on shop!");
-						shopButton.setShopActive(true);
+						shopButton.click();
 					} else {
 						fishingRod.getLure().setPullAmount(0);
 				          if(fishingRod.isPulling()) {
