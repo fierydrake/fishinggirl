@@ -75,6 +75,7 @@ public class Shop extends GameObject{
 		for(ShopItem currentItem : shopItems) {
 			game.despawn(currentItem);
 		}
+		activeItem = null;
 	}
 	
 	public void draw(SpriteBatch batch) {
