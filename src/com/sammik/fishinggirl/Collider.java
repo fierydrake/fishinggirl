@@ -19,4 +19,8 @@ public class Collider {
 	public static boolean isColliding(Vector2 v, GameObject object2) {
 		return object2.getBoundingRectangle().contains(v.x, v.y);
 	}
+	
+	public static boolean isColliding(Vector2 v, Rectangle rect) {
+		return rect.contains(v.x, v.y);
+	}
 }

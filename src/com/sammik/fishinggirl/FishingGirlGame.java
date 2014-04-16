@@ -27,7 +27,7 @@ public class FishingGirlGame implements ApplicationListener {
 	}
 	
 	Assets assets;
-	private OrthographicCamera camera;
+	public OrthographicCamera camera;
 	private SpriteBatch batch;
 	private GameObject background;
 	private Ground cliff;
@@ -47,8 +47,8 @@ public class FishingGirlGame implements ApplicationListener {
 	@Override
 	public void create() {
 		// FIXME LATER: ignore window size for now. Assume it matches world size 
-		float w = Gdx.graphics.getWidth()*2;
-		float h = Gdx.graphics.getHeight()*2;
+		float w = Gdx.graphics.getWidth() * 1.8f;
+		float h = Gdx.graphics.getHeight() * 1.8f;
 		
 		Texture.setEnforcePotImages(false);
 		
@@ -57,7 +57,7 @@ public class FishingGirlGame implements ApplicationListener {
 		
 		assets = new Assets();
 		camera = new OrthographicCamera(w, h);
-		camera.translate(w/2f, -h/2f + 2048);
+		camera.translate(w/1.5f, -h/2f + 2048);
 		camera.update();
 		batch = new SpriteBatch();
 
@@ -102,9 +102,9 @@ public class FishingGirlGame implements ApplicationListener {
 	public void spawn(final GameObject obj, final Layer layer) {
 		if (obj == null) return;
 		switch (layer) {
-		case BG: backgroundLayer.add(obj);
-		case BASE: baseLayer.add(obj);
-		case FG: foregroundLayer.add(obj);
+		case BG: backgroundLayer.add(obj); break;
+		case BASE: baseLayer.add(obj); break;
+		case FG: foregroundLayer.add(obj); break;
 		default:
 			foregroundLayer.add(obj);
 		}
@@ -112,6 +112,12 @@ public class FishingGirlGame implements ApplicationListener {
 	
 	public void spawn(final GameObject obj) {
 		spawn(obj, Layer.FG);
+	}
+	
+	public void despawn(final GameObject obj) {
+		foregroundLayer.remove(obj);
+		baseLayer.remove(obj);
+		backgroundLayer.remove(obj);
 	}
 	
 	public Water getWater() {
@@ -126,10 +132,6 @@ public class FishingGirlGame implements ApplicationListener {
 		return fishies;
 	}
 	
-	public void addToForegroundLayer(GameObject o) {
-		this.foregroundLayer.add(o);
-	}
-
 	@Override
 	public void dispose() {
 		batch.dispose();
@@ -209,8 +211,11 @@ public class FishingGirlGame implements ApplicationListener {
 					Vector3 v = new Vector3(screenX, screenY, 0);
 					camera.unproject(v);
 					if(Collider.isColliding(new Vector2(v.x, v.y), shopButton)) {
-						System.out.println("Clicked on shop!");
+						System.out.println("Clicked on shop button!");
 						shopButton.click();
+					} else if(Collider.isColliding(new Vector2(v.x, v.y), shop.getSpace())) {
+						System.out.println("Clicked on shop!");
+						shop.click(new Vector2(v.x, v.y));
 					} else {
 						fishingRod.getLure().setPullAmount(0);
 				          if(fishingRod.isPulling()) {

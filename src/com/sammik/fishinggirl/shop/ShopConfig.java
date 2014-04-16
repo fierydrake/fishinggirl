@@ -42,4 +42,23 @@ public class ShopConfig {
 			return 0;
 		}
 	}
+	
+	public static String getName(int item) {
+		switch(item) {
+		case SILVER_ROD:
+			return "Silver Rod";
+		case GOLD_ROD:
+			return "Gold Rod";
+		case LEGENDARY_ROD:
+			return "Legendary Rod";
+		case MEDIUM_LURE:
+			return "Medium Lure";
+		case LARGE_LURE:
+			return "Large Lure";
+		case BOMB_LURE:
+			return "Bomb Lure";
+		default:
+			return "None";
+		}
+	}
 }

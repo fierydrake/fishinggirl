@@ -15,10 +15,10 @@ public class ShopButton extends GameObject {
 	
 	public void click() {
 		isShopActive = !isShopActive;
-		shop.open((getX() + getWidth() / 2 - shop.getWidth() / 2 - 10), (getY() + 50));
-	}
-	
-	public boolean getShopActive() {
-		return this.isShopActive;
+		if (isShopActive) {
+			shop.open((getX() + getWidth() / 2 - shop.getWidth() / 2 - 10), (getY() + 50));
+		} else {
+			shop.close();
+		}
 	}
 }
