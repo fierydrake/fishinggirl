@@ -4,6 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 public class Lure extends GameObject{
+	public enum LureSize { 
+		SMALL, MEDIUM, LARGE;
+
+		public LureSize next() {
+			return values()[ordinal()+1];
+		} 
+	}
+	
 	private float velX, velY, forceX, forceY;
 	private LureSize lureSize;
 	private boolean onScreen;
@@ -18,9 +26,6 @@ public class Lure extends GameObject{
 	
 	float aRad = 0;
 	
-	enum LureSize {
-		SMALL, MEDIUM, LARGE
-	}
 
 	private final Texture[] lureTextures = new Texture[] {
 		game.assets.texture("smallLure"),

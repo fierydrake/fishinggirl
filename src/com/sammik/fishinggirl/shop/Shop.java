@@ -1,8 +1,5 @@
 package com.sammik.fishinggirl.shop;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,34 +10,19 @@ import com.badlogic.gdx.math.Vector2;
 import com.sammik.fishinggirl.Collider;
 import com.sammik.fishinggirl.FishingGirlGame;
 import com.sammik.fishinggirl.GameObject;
+import com.sammik.fishinggirl.Lure.LureSize;
 
 public class Shop extends GameObject{
-	private List<ShopItem> shopItems = new ArrayList<ShopItem>();
+	public enum Type { LURE_SHOP, ROD_SHOP }
+	private Type type;
+	
 	private ShopItem activeItem = null;
 	private ShapeRenderer shapeRenderer;
 	
-	public Shop(FishingGirlGame game, List<ShopItem> shopItems, Texture texture, float x, float y) {
+	public Shop(FishingGirlGame game, Type type, Texture texture, float x, float y) {
 		super(game, texture, x, y);
-		this.shopItems = shopItems;
+		this.type = type;
 		shapeRenderer = new ShapeRenderer();
-	}
-	
-	public void printShopItems() {
-		for(ShopItem shopItem : shopItems) {
-			System.out.println("Item: " + shopItem.getDescription() + ". Price: " + shopItem.getPrice());
-		}
-	}
-	
-	private Vector2 calculatePosInShop(int i, int maxCols, int maxRows) {
-		Rectangle rect = getSpace();
-		
-		float cellWidth = rect.getWidth() / maxCols;
-		float cellHeight = rect.getHeight() / maxRows;
-		
-		float cellCentreX = rect.getX() + (i % maxCols) * cellWidth + (cellWidth / 2f);
-		float cellCentreY = rect.getY() + rect.getHeight() - (1 + i/maxRows) * cellHeight + (cellHeight/ 2f);
-		
-		return new Vector2(cellCentreX, cellCentreY);
 	}
 	
 	public Rectangle getSpace() {
@@ -50,31 +32,54 @@ public class Shop extends GameObject{
 	}
 	
 	public void click(Vector2 vec) {
-		for(ShopItem currentItem : shopItems) {
-			if(Collider.isColliding(vec, currentItem)) {
-				activeItem = currentItem;
-				System.out.println("The active item is: " + activeItem.getName());
-				break;
-			}
-		}
 	}
 
+
+// TODO
+//	shopItems.add(new ShopItem(this, assets.texture("fishingRod"), ShopConfig.SILVER_ROD, x, y));
+//	shopItems.add(new ShopItem(this, assets.texture(""), ShopConfig.GOLD_ROD, x, y));
+//	shopItems.add(new ShopItem(this, assets.texture(""), ShopConfig.LEGENDARY_ROD, x, y));
+//	shopItems.add(new ShopItem(this, assets.texture("mediumLure"), ShopConfig.MEDIUM_LURE, x, y));
+//	shopItems.add(new ShopItem(this, assets.texture("largeLure"), ShopConfig.LARGE_LURE, x, y));
+//	shopItems.add(new ShopItem(this, assets.texture("bombLure"), ShopConfig.BOMB_LURE, x, y));
+	
+	private ShopItem buildLure(LureSize lureSize) {
+		switch (lureSize) {
+		case MEDIUM: return new ShopItem(game, game.assets.texture("mediumLure"), ShopConfig.MEDIUM_LURE);
+		case LARGE: return new ShopItem(game, game.assets.texture("largeLure"), ShopConfig.MEDIUM_LURE);
+		default:
+			throw new RuntimeException("Should not happen!");
+		}
+	}
+	
+	private boolean calcShopItem() {
+		switch (type) {
+		case LURE_SHOP:
+			LureSize lureSize = game.getPlayer().getLureSize();
+			if (lureSize == LureSize.LARGE) return false;
+			activeItem = buildLure(lureSize.next());
+			return true;
+		case ROD_SHOP:
+			/* TODO */
+			return false;
+		default:
+			throw new RuntimeException("Should not happen!");
+		}
+	}
+	
 	public void open(float f, float g) {
-		game.spawn(this);
-		setPosition(f, g);
-		int i = 0;
-		for(ShopItem currentItem : shopItems) {
-			Vector2 vec = calculatePosInShop(i++, 2, 2);
-			currentItem.setPosition(vec.x - currentItem.getWidth() / 2f, vec.y - currentItem.getHeight() / 2f);
-			game.spawn(currentItem);
+		System.out.println("Open!");
+		if (calcShopItem() /*&& game.getPlayer().canAfford(activeItem)*/) {
+			game.spawn(this);
+			setPosition(f, g);
+			Rectangle space = getSpace();
+			activeItem.setPosition(space.x + 10, space.y + (space.height - activeItem.getHeight()) / 2f);
 		}
 	}
 	
 	public void close() {
 		game.despawn(this);
-		for(ShopItem currentItem : shopItems) {
-			game.despawn(currentItem);
-		}
+		game.despawn(activeItem);
 		activeItem = null;
 	}
 	

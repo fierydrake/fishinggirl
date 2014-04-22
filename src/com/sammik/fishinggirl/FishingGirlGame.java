@@ -26,7 +26,7 @@ public class FishingGirlGame implements ApplicationListener {
 		BG, FG, BASE
 	}
 	
-	Assets assets;
+	public Assets assets;
 	public OrthographicCamera camera;
 	private SpriteBatch batch;
 	private GameObject background;
@@ -84,20 +84,17 @@ public class FishingGirlGame implements ApplicationListener {
 		baseLayer.add(cliff);
 		foregroundLayer.add(fishingRod);
 		foregroundLayer.add(player);
-
-		shopItems.add(new ShopItem(this, assets.texture("fishingRod"), ShopConfig.SILVER_ROD, x, y));
-//		shopItems.add(new ShopItem(this, assets.texture(""), ShopConfig.GOLD_ROD, x, y));
-//		shopItems.add(new ShopItem(this, assets.texture(""), ShopConfig.LEGENDARY_ROD, x, y));
-		shopItems.add(new ShopItem(this, assets.texture("mediumLure"), ShopConfig.MEDIUM_LURE, x, y));
-//		shopItems.add(new ShopItem(this, assets.texture("largeLure"), ShopConfig.LARGE_LURE, x, y));
-		shopItems.add(new ShopItem(this, assets.texture("bombLure"), ShopConfig.BOMB_LURE, x, y));
 		
 		//set up shop (guffaw)
-		shop = new Shop(this, shopItems, assets.texture("shop"), 0, 0);
-		shop.printShopItems();
+		shop = new Shop(this, Shop.Type.LURE_SHOP, assets.texture("shop"), 0, 0);
 		shopButton = new ShopButton(this, assets.texture("shopButton"), water.getCenterX(), water.getTop(), shop);
 		foregroundLayer.add(shopButton);
 	}
+
+	public Water getWater() { return this.water; }
+	public Ground getCliff() { return this.cliff; }
+	public List<Fish> getFishies() { return fishies; }
+	public Player getPlayer() { return player; }
 	
 	public void spawn(final GameObject obj, final Layer layer) {
 		if (obj == null) return;
@@ -118,18 +115,6 @@ public class FishingGirlGame implements ApplicationListener {
 		foregroundLayer.remove(obj);
 		baseLayer.remove(obj);
 		backgroundLayer.remove(obj);
-	}
-	
-	public Water getWater() {
-		return this.water;
-	}
-	
-	public Ground getCliff() {
-		return this.cliff;
-	}
-	
-	public List<Fish> getFishies() {
-		return fishies;
 	}
 	
 	@Override
