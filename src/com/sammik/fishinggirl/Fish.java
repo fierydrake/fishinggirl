@@ -1,25 +1,32 @@
 package com.sammik.fishinggirl;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 
 public class Fish extends GameObject{
 	public enum Type {
 		SMALL, MEDIUM, LARGE
 	}
-	private float speed = 30.0f;
+	private Vector2 direction;
+	protected float speed = 30.0f;
 
 	public Fish(FishingGirlGame game, Texture texture, float x, float y) {
 		super(game, texture, x, y);
+		direction = new Vector2(((new Random().nextInt(2) == 1) ? -1 : 1), 0);
+		if(direction.x > 0) flip(true, false);
 	}
 	
 	public void update(){
-		if (super.getRight() <= game.getWater().getRight()){
-			setX(getX() + Gdx.graphics.getDeltaTime() * speed);
+		float newX = getX() + direction.x * Gdx.graphics.getDeltaTime() * speed;
+		if (newX < game.getCliff().getRight() || newX > game.getWater().getRight()) {
+			direction.x *= -1;
+			newX = getX() + direction.x * Gdx.graphics.getDeltaTime() * speed;
+			flip(true, false);
 		}
-		else if(super.getLeft() >= game.getCliff().getRight()){
-			setX(getX() - Gdx.graphics.getDeltaTime() * speed);
-		}
+		setPosition(newX, getY() + direction.y * Gdx.graphics.getDeltaTime() * speed);
 	}
 	
 	public static Type randomType() {
