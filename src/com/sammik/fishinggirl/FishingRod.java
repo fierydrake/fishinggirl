@@ -9,24 +9,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.sammik.fishinggirl.FishingRod.RodState;
 
 public class FishingRod extends GameObject {
+	public enum RodState { IDLE, CASTING, PULLING }
+	
 	private float poleEndX, poleEndY;
-	private Lure lure;
-	
-	private boolean pulling = false;
+	private RodState rodState = RodState.IDLE;
 	private int pullingForce = 0, maxPullingForce = 150;
-	
 	private float rotateSpeed = 1.3f;
 	private int pullForceIncreaseSpeed = 1;
 	private int releasePoint = 30;
-	private boolean casting;
 	
 	public FishingRod(final FishingGirlGame game, final float x, final float y) {
 		super(game, new TextureRegion(new Texture(Gdx.files.local("fishingGirl/fishingRod1.png")), 0, 0, 197, 15), x, y);
 		
-		lure = new Lure(game, this, Lure.LureSize.SMALL);
-
 		setOrigin(0, getHeight() / 2);
 		setScale(0.8f);
 		
@@ -34,6 +31,9 @@ public class FishingRod extends GameObject {
 		poleEndY = getY() - 10;
 		
 	}
+	
+	public RodState getRodState() { return rodState; }
+	public void setRodState(RodState rodState) { this.rodState = rodState; }
 	
 	public void update() {
 
@@ -46,52 +46,35 @@ public class FishingRod extends GameObject {
 		poleEndX = (float) (getX() + r * Math.cos(Math.PI * (ang/360.0)));
 		poleEndY = (float) (getY() + r * Math.sin(Math.PI * (ang/360.0)));
 		
-		if(isPulling()) {
+		if(rodState == RodState.PULLING) {
 			if(pullingForce < maxPullingForce) {
 				pullingForce += pullForceIncreaseSpeed;
 				pullBack();
 			} else {
-				pullingForce = 0;
-				pulling = false;
+				rodState = RodState.CASTING;
 			}
-		} else if(casting){
+		} else if(rodState == RodState.CASTING){
 			castAnimation();
 		} else {
 			setRotation(0);
 			pullingForce = 0;
 		}
-		
-		if(lure != null) {
-			lure.update();
-			if(!lure.isOnScreen()) {
-				lure.setAttached(true);
-			}
-		}
-		//sprite.setPosition(x, y);
 	}
 	
 	public void Cast() {
-		casting = true;
+		rodState = RodState.CASTING;
 	}
-	
 	
 	public void draw(SpriteBatch batch) {
 		super.draw(batch);
-		if(lure != null) {
-			lure.draw(batch);
-		}
 		batch.end();
 		ShapeRenderer shapeRenderer = new ShapeRenderer();
 		shapeRenderer.begin(ShapeType.Line);
 		shapeRenderer.setColor(Color.BLACK);
 		shapeRenderer.setProjectionMatrix(game.getCamera().combined);
-		shapeRenderer.line(poleEndX, poleEndY, lure.getX() + lure.getWidth() / 2, lure.getY() + lure.getHeight() / 2);
+		shapeRenderer.line(poleEndX, poleEndY, game.getLure().getX() + game.getLure().getWidth() / 2, game.getLure().getY() + game.getLure().getHeight() / 2);
 		shapeRenderer.end();
 		batch.begin();
-	}
-	
-	public boolean isPulling() {
-		return pulling;
 	}
 	
 	public void pullBack() {
@@ -99,21 +82,17 @@ public class FishingRod extends GameObject {
 	}
 	
 	public void castAnimation() {
-		if(lure.isAttached() && getRotation() < releasePoint) {
-			lure.Cast(pullingForce);
-			lure.setAttached(false);
+		if((rodState == RodState.CASTING || rodState == RodState.IDLE) && getRotation() < releasePoint) {
+			game.getLure().Cast(pullingForce);
+			rodState = RodState.CASTING;
 		}
 		
-		if(getRotation() > 0 && casting) {
+		if(getRotation() > 0 && rodState == RodState.CASTING) {
 			rotate(-rotateSpeed * 10);
 		} else {
 			setRotation(0);
-			casting = false;
+			rodState = RodState.IDLE;
 		}
-	}
-	
-	public void setPulling(boolean b) {
-		pulling = b;
 	}
 	
 	public float getEndX() {
@@ -123,12 +102,6 @@ public class FishingRod extends GameObject {
 	public float getEndY() {
 		return this.poleEndY;
 	}
-	
-	public Lure getLure() {
-		return this.lure;
-	}
 
-	public void setCasting(boolean b) {
-		this.casting = b;
-	}
+	
 }
