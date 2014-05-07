@@ -71,7 +71,6 @@ public class FishingGirlGame implements ApplicationListener {
 		player = new Player(this, assets.texture("player"), cliff.getRight() - 80, cliff.getTop());
 		
 		lure = new Lure(this, fishingRod, Lure.LureSize.SMALL);
-		
 		spawn(lure);
 		
 		for (int i=0; i < MAX_FISH; i++) {
@@ -217,15 +216,12 @@ public class FishingGirlGame implements ApplicationListener {
 						shop.click(new Vector2(v.x, v.y));
 					} else {
 						lure.setPullAmount(0);
-				          if(fishingRod.getRodState() == RodState.PULLING) {
+				          if(fishingRod.getRodState() == RodState.PULLING && lure.isAttached()) {
 				        	  fishingRod.Cast();
-				        	  fishingRod.setRodState(RodState.CASTING);
 				          }
-				          else if(fishingRod.getRodState() == RodState.IDLE){
+				          else if(fishingRod.getRodState() == RodState.IDLE && lure.isAttached()){
 				        	  fishingRod.setRodState(RodState.PULLING);
-				          } else {
-				        	  
-				          }
+				          } 
 				          return true;
 					}
 			      }

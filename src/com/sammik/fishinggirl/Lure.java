@@ -53,7 +53,6 @@ public class Lure extends GameObject{
 	}
 	
 	public void update() {
-		System.out.println(isAttached);
 		for(int i = 0; i < game.getFishies().size(); i++) {
 			if(Collider.isColliding(this, game.getFishies().get(i))) {
 				if(debug)	System.out.println("COLLIDING WITH FISH " + i + "!");
@@ -98,9 +97,7 @@ public class Lure extends GameObject{
 			this.velY = ((float) (centreY + Math.sin(aRad) * r) - getY());
 			
 			onScreen = true;
-		} 
-		
-		else if(isTouchingCliff) {
+		} else if(isTouchingCliff) {
 			r -= pullAmount;
 			this.velX = ((float) (centreX + Math.cos(aRad) * r) - getX());
 			this.velY = ((float) (centreY + Math.sin(aRad) * r) - getY());

@@ -14,6 +14,7 @@ import com.sammik.fishinggirl.FishingRod.RodState;
 public class FishingRod extends GameObject {
 	public enum RodState { IDLE, CASTING, PULLING }
 	
+	private boolean isLureAttached;
 	private float poleEndX, poleEndY;
 	private RodState rodState = RodState.IDLE;
 	private int pullingForce = 0, maxPullingForce = 150;
@@ -36,7 +37,6 @@ public class FishingRod extends GameObject {
 	public void setRodState(RodState rodState) { this.rodState = rodState; }
 	
 	public void update() {
-
 		float dx = (getWidth()/2 + 45);
 		float dy = -10;
 	
@@ -62,6 +62,7 @@ public class FishingRod extends GameObject {
 	}
 	
 	public void Cast() {
+		isLureAttached = false;
 		rodState = RodState.CASTING;
 	}
 	
@@ -103,5 +104,8 @@ public class FishingRod extends GameObject {
 		return this.poleEndY;
 	}
 
-	
+	public boolean hasAttachedLure() {
+		return false;
+	}
+
 }
