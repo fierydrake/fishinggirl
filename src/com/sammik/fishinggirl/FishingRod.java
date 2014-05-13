@@ -37,14 +37,15 @@ public class FishingRod extends GameObject {
 	
 	public void update() {
 
-		float dx = (getWidth()/2 + 45);
-		float dy = -10;
+		float dx = getWidth() * getScaleX();
+		float dy = 0;
+		float dr = 1;
 	
-		float ang = getRotation() / 0.45f;
+		float ang = getRotation() - dr;
 		float r = (float)Math.sqrt((dx * dx) + (dy * dy));
 		
-		poleEndX = (float) (getX() + r * Math.cos(Math.PI * (ang/360.0)));
-		poleEndY = (float) (getY() + r * Math.sin(Math.PI * (ang/360.0)));
+		poleEndX = (float) (getByOriginX() + r * Math.cos(2.0*Math.PI * (ang/360.0)));
+		poleEndY = (float) (getByOriginY() + r * Math.sin(2.0*Math.PI * (ang/360.0)));
 		
 		if(isPulling()) {
 			if(pullingForce < maxPullingForce) {
@@ -67,7 +68,6 @@ public class FishingRod extends GameObject {
 				lure.setAttached(true);
 			}
 		}
-		//sprite.setPosition(x, y);
 	}
 	
 	public void Cast() {

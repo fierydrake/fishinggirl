@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.sammik.fishinggirl.Collider;
 import com.sammik.fishinggirl.FishingGirlGame;
 import com.sammik.fishinggirl.GameObject;
 import com.sammik.fishinggirl.Lure.LureSize;
@@ -86,7 +85,7 @@ public class Shop extends GameObject{
 	public void draw(SpriteBatch batch) {
 		super.draw(batch);
 		batch.end();
-		shapeRenderer.begin(ShapeType.Rectangle);
+		shapeRenderer.begin(ShapeType.Line);
 		shapeRenderer.setColor(Color.YELLOW);
 		shapeRenderer.setProjectionMatrix(game.camera.combined);
 		

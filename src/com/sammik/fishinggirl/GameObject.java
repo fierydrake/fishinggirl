@@ -42,6 +42,9 @@ public class GameObject extends Sprite {
 	public void setPositionByOrigin(final float x, final float y) {
 		setPosition(x - getOriginX(), y - getOriginY());
 	}
+
+	public float getByOriginX() { return getX() + getOriginX(); }
+	public float getByOriginY() { return getY() + getOriginY(); }
 	
 	public float getRight() {
 		final Rectangle bounds = getBoundingRectangle();
