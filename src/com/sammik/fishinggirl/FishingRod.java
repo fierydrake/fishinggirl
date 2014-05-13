@@ -37,15 +37,6 @@ public class FishingRod extends GameObject {
 	
 	public void update() {
 
-		float dx = getWidth() * getScaleX();
-		float dy = 0;
-		float dr = 1;
-	
-		float ang = getRotation() - dr;
-		float r = (float)Math.sqrt((dx * dx) + (dy * dy));
-		
-		poleEndX = (float) (getByOriginX() + r * Math.cos(2.0*Math.PI * (ang/360.0)));
-		poleEndY = (float) (getByOriginY() + r * Math.sin(2.0*Math.PI * (ang/360.0)));
 		
 		if(isPulling()) {
 			if(pullingForce < maxPullingForce) {
@@ -61,6 +52,13 @@ public class FishingRod extends GameObject {
 			setRotation(0);
 			pullingForce = 0;
 		}
+
+		float r = getWidth() * getScaleX();
+		float dr = 1;
+		float ang = getRotation() - dr;
+		
+		poleEndX = (float) (getByOriginX() + r * Math.cos(2.0*Math.PI * (ang/360.0)));
+		poleEndY = (float) (getByOriginY() + r * Math.sin(2.0*Math.PI * (ang/360.0)));
 		
 		if(lure != null) {
 			lure.update();
