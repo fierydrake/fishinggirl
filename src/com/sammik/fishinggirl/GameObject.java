@@ -3,10 +3,12 @@ package com.sammik.fishinggirl;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
 public class GameObject extends Sprite {
 	protected final FishingGirlGame game;
+	protected float offsetX, offsetY;
 	
 	public GameObject(final FishingGirlGame game, final Texture texture, final float x, final float y) {
 		super(texture);
@@ -20,19 +22,22 @@ public class GameObject extends Sprite {
 		setPosition(x, y);
 	}
 	
-	public GameObject(final FishingGirlGame game, final Texture texture, final float x, final float y, final float ox, final float oy) {
+	public GameObject(final FishingGirlGame game, final Texture texture, final float x, final float y, final float offx, final float offy) {
 		super(texture);
 		this.game = game;
-		setOrigin(ox, oy);
-		setPositionByOrigin(x, y);
+		offsetX = offx; offsetY = offy;
+		setPosition(x, y);
 	}
 	
-	public GameObject(final FishingGirlGame game, final TextureRegion region, final float x, final float y, final float ox, final float oy) {
+	public GameObject(final FishingGirlGame game, final TextureRegion region, final float x, final float y, final float offx, final float offy) {
 		super(region);
 		this.game = game;
-		setOrigin(ox, oy);
-		setPositionByOrigin(x, y);
+		offsetX = offx; offsetY = offy;
+		setPosition(x, y);
 	}
+	
+	public float getAdjustedX() { return getX() + offsetX; }
+	public float getAdjustedY() { return getY() + offsetY; }
 	
 	public float getLeft() {
 		final Rectangle bounds = getBoundingRectangle();
@@ -69,6 +74,9 @@ public class GameObject extends Sprite {
 	public float getCenterY() {
 		final Rectangle bounds = getBoundingRectangle();
 		return bounds.y + bounds.height / 2f;
+	}
+
+	public void debugDraw(ShapeRenderer rectangleRenderer) {
 	}
 
 }

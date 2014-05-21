@@ -1,9 +1,26 @@
 package com.sammik.fishinggirl;
 
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Collider {
+	private GameObject parent;
+	private Rectangle collisionBounds;
+	
+	public Collider(GameObject parent, float x, float y, float w, float h) {
+		this.parent = parent;
+		collisionBounds = new Rectangle(x, y, w, h);
+	}
+	
+	public boolean isCollidingWith(Collider other) {
+		return Intersector.intersectRectangles(getWorldCollisionRectangle(), other.getWorldCollisionRectangle(), null);
+	}
+	
+	public Rectangle getWorldCollisionRectangle() {
+		return new Rectangle(collisionBounds.x + parent.getX(), collisionBounds.y + parent.getY(), collisionBounds.width, collisionBounds.height);
+	}
+
 	public static boolean isColliding(Rectangle rect, GameObject object) {
 		return object.getBoundingRectangle().overlaps(rect);
 	}

@@ -12,11 +12,12 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.sammik.fishinggirl.FishingRod.RodState;
 import com.sammik.fishinggirl.shop.Shop;
 import com.sammik.fishinggirl.shop.ShopButton;
-import com.sammik.fishinggirl.shop.ShopConfig;
 import com.sammik.fishinggirl.shop.ShopItem;
 
 public class FishingGirlGame implements ApplicationListener {
@@ -34,6 +35,7 @@ public class FishingGirlGame implements ApplicationListener {
 	private Water water;
 	private Player player; 
 	private FishingRod fishingRod;
+	private Lure lure;
 
 	private List<GameObject> backgroundLayer = new ArrayList<GameObject>();
 	private List<GameObject> baseLayer = new ArrayList<GameObject>();
@@ -68,6 +70,9 @@ public class FishingGirlGame implements ApplicationListener {
 		fishingRod = new FishingRod(this, cliff.getRight() - 45, cliff.getTop() + 10);
 		player = new Player(this, assets.texture("player"), cliff.getRight() - 80, cliff.getTop());
 		
+		lure = new Lure(this, fishingRod, Lure.LureSize.SMALL);
+		spawn(lure);
+		
 		for (int i=0; i < MAX_FISH; i++) {
 			final Fish fishie = Fish.randomFish(this, cliff.getRight(), water.getRight(), water.getBottom(), water.getTop()); 
 			fishies.add(fishie);
@@ -95,6 +100,7 @@ public class FishingGirlGame implements ApplicationListener {
 	public Ground getCliff() { return this.cliff; }
 	public List<Fish> getFishies() { return fishies; }
 	public Player getPlayer() { return player; }
+	public Lure getLure() { return lure; }
 	
 	public void spawn(final GameObject obj, final Layer layer) {
 		if (obj == null) return;
@@ -136,6 +142,7 @@ public class FishingGirlGame implements ApplicationListener {
 			fishie.update();
 		}
 		
+		lure.update();
 		// render
 		batch.begin();
 		background.draw(batch);
@@ -143,6 +150,12 @@ public class FishingGirlGame implements ApplicationListener {
 		for (final GameObject s : baseLayer) s.draw(batch);
 		for (final GameObject s : foregroundLayer) s.draw(batch);
 		batch.end();
+		
+		// debug!
+		final ShapeRenderer shapeRenderer = new ShapeRenderer();
+		for (final GameObject s : backgroundLayer) s.debugDraw(shapeRenderer);
+		for (final GameObject s : baseLayer) s.debugDraw(shapeRenderer);
+		for (final GameObject s : foregroundLayer) s.debugDraw(shapeRenderer);
 	}
 
 	@Override
@@ -165,9 +178,9 @@ public class FishingGirlGame implements ApplicationListener {
 		   @Override
 		   public boolean touchDown (int x, int y, int pointer, int button) {
 			   if (button == Input.Buttons.LEFT) {
-				   fishingRod.getLure().setPullAmount(5f);
+				   lure.setPullAmount(5f);
 			   } else {
-				   fishingRod.getLure().setPullAmount(0);
+				   lure.setPullAmount(0);
 			   }
 			   return false;
 		   }
@@ -202,17 +215,13 @@ public class FishingGirlGame implements ApplicationListener {
 						System.out.println("Clicked on shop!");
 						shop.click(new Vector2(v.x, v.y));
 					} else {
-						fishingRod.getLure().setPullAmount(0);
-				          if(fishingRod.isPulling()) {
+						lure.setPullAmount(0);
+				          if(fishingRod.getRodState() == RodState.PULLING && lure.isAttached()) {
 				        	  fishingRod.Cast();
-				        	  fishingRod.setCasting(true);
-				        	  fishingRod.setPulling(false);
 				          }
-				          else if(fishingRod.getLure().isAttached()){
-				        	  fishingRod.setPulling(true);
-				          } else {
-				        	  
-				          }
+				          else if(fishingRod.getRodState() == RodState.IDLE && lure.isAttached()){
+				        	  fishingRod.setRodState(RodState.PULLING);
+				          } 
 				          return true;
 					}
 			      }
@@ -237,4 +246,5 @@ public class FishingGirlGame implements ApplicationListener {
 				return false;
 			}
 		}
+
 }

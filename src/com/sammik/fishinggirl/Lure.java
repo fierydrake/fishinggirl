@@ -1,7 +1,11 @@
 package com.sammik.fishinggirl;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Lure extends GameObject{
 	public enum LureSize { 
@@ -12,11 +16,13 @@ public class Lure extends GameObject{
 		} 
 	}
 	
-	private float velX, velY, forceX, forceY;
+	private float velX, velY;
 	private LureSize lureSize;
 	private boolean onScreen;
 	private boolean isAttached, isCasting, isSubmerged, isTouchingCliff;
 	private float pullAmount;
+	private final float size = 50f;
+	private Collider collider = new Collider(this, -size/2f, -size/2f, size, size);
 	
 	static boolean debug = true;
 	
@@ -34,19 +40,14 @@ public class Lure extends GameObject{
 	private float waterLevel = game.getWater().getTop();
 	
 	
-	public Lure(final FishingGirlGame game, FishingRod fishingRod, LureSize size) {
+	public Lure(final FishingGirlGame game, FishingRod fishingRod, LureSize lureSize) {
 		super(game, game.assets.texture("smallLure"), fishingRod.getEndX(), fishingRod.getEndY(), game.assets.texture("smallLure").getWidth() / 2f, game.assets.texture("smallLure").getHeight() / 2f);
-		this.onScreen = true;
-		this.isAttached = true;
-		this.isCasting = false;
-		lureSize = size;
 		this.fishingRod = fishingRod;
-
-		this.pullAmount = 0;
-		
-//		if(lureSize == LureSize.SMALL) {
-//			lureTexture = new Texture(Gdx.files.local("fishingGirl/lureSmall.png"));
-//		}
+		onScreen = true;
+		isAttached = true;
+		isCasting = false;
+		this.lureSize = lureSize;
+		pullAmount = 0;
 	}
 	
 	private void updateAttached() {
@@ -97,7 +98,6 @@ public class Lure extends GameObject{
 	}
 	
 	public void update() {
-		
 		for(int i = 0; i < game.getFishies().size(); i++) {
 			if(Collider.isColliding(this, game.getFishies().get(i))) {
 				if(debug)	System.out.println("COLLIDING WITH FISH " + i + "!");
@@ -116,7 +116,6 @@ public class Lure extends GameObject{
 			//WHAT!!
 			System.err.println("Got into an bad state (" + isAttached + ", " + isCasting + ", " + isSubmerged + ")");
 		}
-						
 		if(getX() > FishingGirlGame.WORLD_WIDTH || getY() > FishingGirlGame.WORLD_HEIGHT || getX() < 0 || getY() < 0) {
 			velX = 0;
 			velY = 0;
@@ -157,5 +156,14 @@ public class Lure extends GameObject{
 	
 	public void setPullAmount(float amount) {
 		this.pullAmount = amount;
+	}
+	
+	public void debugDraw(ShapeRenderer shapeRenderer) {
+		final Rectangle colliderBounds = collider.getWorldCollisionRectangle();
+		shapeRenderer.setProjectionMatrix(game.camera.combined);
+		shapeRenderer.begin(ShapeType.Line);
+		shapeRenderer.setColor(Color.GREEN);
+		shapeRenderer.rect(colliderBounds.x, colliderBounds.y, colliderBounds.width, colliderBounds.height);
+		shapeRenderer.end();
 	}
 }
