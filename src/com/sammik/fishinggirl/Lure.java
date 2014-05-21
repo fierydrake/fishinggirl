@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 public class Lure extends GameObject{
 	public enum LureSize { 
@@ -24,13 +25,8 @@ public class Lure extends GameObject{
 	private final float size = 50f;
 	private Collider collider = new Collider(this, -size/2f, -size/2f, size, size);
 	
-	static boolean debug = true;
+	static boolean debug = false;
 	
-	float r;
-	
-	float aRad = 0;
-	
-
 	private final Texture[] lureTextures = new Texture[] {
 		game.assets.texture("smallLure"),
 		game.assets.texture("mediumLure"),
@@ -63,15 +59,22 @@ public class Lure extends GameObject{
 	}
 	
 	private void updateSubmerged() {
-		final float centreX = fishingRod.getEndX(), centreY = fishingRod.getEndY();
-		if(getLeft() < game.getCliff().getRight() && !isTouchingCliff) {
-			isTouchingCliff = true;
-		}
-		aRad += (isTouchingCliff ? 0.011f : -0.011f);
-		r -= pullAmount;
-		final float x = (float) (centreX + Math.cos(aRad) * r);
-		final float y = (float) (centreY + Math.sin(aRad) * r);
-		setPositionByOrigin(x, y);
+		// TODO do we still need cliff collision? currently drag is high enough the lure never reaches cliff
+		float x = getByOriginX(), y = getByOriginY();
+		float dx = x - fishingRod.getEndX();
+		float dy = y - fishingRod.getEndY();
+		Vector2 radiusAdjustment = new Vector2(dx, dy).nor().scl(pullAmount);
+		Vector2 tangentUnit = new Vector2(dx, dy).rotate(-90).nor();
+		Vector2 gravity = new Vector2(0, -98f);
+		Vector2 v = new Vector2(velX, velY);
+		float gravityT = gravity.dot(tangentUnit);
+		float vT = v.dot(tangentUnit);
+		float speed = vT + gravityT * Gdx.graphics.getDeltaTime();
+		speed *= 0.99f; // drag?
+		v = tangentUnit;
+		v.scl(speed);
+		velX = v.x; velY = v.y;
+		setPositionByOrigin(x - radiusAdjustment.x + velX * Gdx.graphics.getDeltaTime(), y - radiusAdjustment.y + velY * Gdx.graphics.getDeltaTime());
 		onScreen = true;
 	}
 
@@ -81,12 +84,7 @@ public class Lure extends GameObject{
 	private void submerge() {
 		isCasting = false;
 		isSubmerged = true;
-		
-		final float centreX = fishingRod.getEndX(), centreY = fishingRod.getEndY();
-		final float dx = getByOriginX() - centreX;
-		final float dy = getByOriginY() - centreY;
-		r = (float) Math.sqrt((dx * dx) + (dy * dy));
-		aRad = (float) Math.atan2(dy, dx);
+		velX = 0f; velY = 0f;
 	}
 	
 	private void surface() {
