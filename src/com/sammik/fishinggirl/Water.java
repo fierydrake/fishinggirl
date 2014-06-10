@@ -24,7 +24,6 @@ public class Water extends GameObject {
 		return new Rectangle(getX(), getY(), widthExtent, heightExtent);
 	}
 	
-	@Override
 	public void draw(SpriteBatch batch) {
 		final float w = super.getWidth(), h = super.getHeight();
 		if (w == 0f || h == 0f) return;

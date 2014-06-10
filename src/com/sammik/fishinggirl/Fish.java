@@ -3,21 +3,33 @@ package com.sammik.fishinggirl;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Fish extends GameObject{
+public abstract class Fish extends GameObject{
 	public enum Type {
 		SMALL, MEDIUM, LARGE
 	}
 	private Vector2 direction;
+	protected Vector2 mouthPosition;
 	protected float speed = 30.0f;
 
 	public Fish(FishingGirlGame game, Texture texture, float x, float y) {
 		super(game, texture, x, y);
 		direction = new Vector2(((new Random().nextInt(2) == 1) ? -1 : 1), 0);
-		if(direction.x > 0) flip(true, false);
+		mouthPosition = new Vector2(getLeft(), getCenterY());
+		if(direction.x > 0) { 
+			flip(true, false);
+			mouthPosition = new Vector2(getRight(), getCenterY());
+		}
 	}
+	
+	protected abstract Collider getEatCollider();
+	protected abstract Collider getSeeCollider();
 	
 	public void update(){
 		float newX = getX() + direction.x * Gdx.graphics.getDeltaTime() * speed;
@@ -52,5 +64,20 @@ public class Fish extends GameObject{
 		default:
 			return null;
 		}
+	}
+	
+	public void debugDraw(ShapeRenderer shapeRenderer) {
+		final Rectangle[] collidersToDraw = new Rectangle[] {
+				getEatCollider().getWorldCollisionRectangle(),
+				getSeeCollider().getWorldCollisionRectangle() };
+		final Color[] colours = new Color[] { Color.GREEN, Color.BLUE };
+		shapeRenderer.setProjectionMatrix(game.camera.combined);
+		shapeRenderer.begin(ShapeType.Line);
+		for (int i=0; i< collidersToDraw.length; i++) {
+			final Rectangle collider = collidersToDraw[i];
+			shapeRenderer.setColor(colours[i]);
+			shapeRenderer.rect(collider.x, collider.y, collider.width, collider.height);
+		}
+		shapeRenderer.end();
 	}
 }
