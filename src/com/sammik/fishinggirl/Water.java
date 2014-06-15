@@ -1,7 +1,9 @@
 package com.sammik.fishinggirl;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Water extends GameObject {
@@ -24,9 +26,15 @@ public class Water extends GameObject {
 		return new Rectangle(getX(), getY(), widthExtent, heightExtent);
 	}
 	
+	public float getWaterLine() { return getTop() - 20f; }
+	
+	public void debugDraw(ShapeRenderer lineRenderer) {
+		lineRenderer.setColor(Color.BLUE);
+		lineRenderer.line(getLeft(), getWaterLine(),  getRight(), getWaterLine()); 
+	}
 	@Override
 	public void draw(SpriteBatch batch) {
-		final float w = super.getWidth(), h = super.getHeight();
+		final float w = super.getWidth() - 1f, h = super.getHeight();
 		if (w == 0f || h == 0f) return;
 		if (w == widthExtent && h == heightExtent) {
 			super.draw(batch);

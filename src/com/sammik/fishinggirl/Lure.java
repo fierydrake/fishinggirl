@@ -32,7 +32,7 @@ public class Lure extends GameObject{
 		game.assets.texture("largeLure"),
 	};
 	private FishingRod fishingRod;
-	private float waterLevel = game.getWater().getTop();
+	private float waterLevel = game.getWater().getWaterLine();
 	
 	
 	public Lure(final FishingGirlGame game, FishingRod fishingRod, LureSize lureSize) {
