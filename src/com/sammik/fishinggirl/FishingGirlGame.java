@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.sammik.fishinggirl.shop.Shop;
@@ -29,11 +30,13 @@ public class FishingGirlGame implements ApplicationListener {
 	public Assets assets;
 	public OrthographicCamera camera;
 	private SpriteBatch batch;
+	private ShapeRenderer lineRenderer;
 	private GameObject background;
 	private Ground cliff;
 	private Water water;
 	private Player player; 
 	private FishingRod fishingRod;
+	private boolean debugMode;
 
 	private List<GameObject> backgroundLayer = new ArrayList<GameObject>();
 	private List<GameObject> baseLayer = new ArrayList<GameObject>();
@@ -56,11 +59,13 @@ public class FishingGirlGame implements ApplicationListener {
 		MyInputProcessor inputProcessor = new MyInputProcessor();
 		Gdx.input.setInputProcessor(inputProcessor);
 
+		debugMode = false;
 		assets = new Assets();
 		camera = new OrthographicCamera(w, h);
 		camera.translate(w/.8f, -h/2f + 2048);
 		camera.update();
 		batch = new SpriteBatch();
+		lineRenderer = new ShapeRenderer();
 
 		cliff = new Ground(this, assets.texture("cliff"), 0, 0);
 		background = new GameObject(this, assets.texture("background"), 0, cliff.getTop() - 50);
@@ -140,7 +145,8 @@ public class FishingGirlGame implements ApplicationListener {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		batch.setProjectionMatrix(camera.combined);
-
+		lineRenderer.setProjectionMatrix(camera.combined);
+		
 		// logic
 		for (final GameObject s : activeObjects) {
 			s.update();
@@ -153,12 +159,19 @@ public class FishingGirlGame implements ApplicationListener {
 		for (final GameObject s : baseLayer) s.draw(batch);
 		for (final GameObject s : foregroundLayer) s.draw(batch);
 		batch.end();
-
+		
+		lineRenderer.begin(ShapeType.Line);
+		for (final GameObject s : backgroundLayer) s.drawLines(lineRenderer);
+		for (final GameObject s : baseLayer) s.drawLines(lineRenderer);
+		for (final GameObject s : foregroundLayer) s.drawLines(lineRenderer);
+		
 		// debug!
-		final ShapeRenderer shapeRenderer = new ShapeRenderer();
-		for (final GameObject s : backgroundLayer) s.debugDraw(shapeRenderer);
-		for (final GameObject s : baseLayer) s.debugDraw(shapeRenderer);
-		for (final GameObject s : foregroundLayer) s.debugDraw(shapeRenderer);
+		if (debugMode) {
+			for (final GameObject s : backgroundLayer) s.debugDraw(lineRenderer);
+			for (final GameObject s : baseLayer) s.debugDraw(lineRenderer);
+			for (final GameObject s : foregroundLayer) s.debugDraw(lineRenderer);
+		}
+		lineRenderer.end();
 	}
 
 	@Override
@@ -197,7 +210,9 @@ public class FishingGirlGame implements ApplicationListener {
 
 		@Override
 		public boolean keyTyped(char character) {
-			// TODO Auto-generated method stub
+			if (character == 'd' || character == 'D') {
+				debugMode = !debugMode;
+			}
 			return false;
 		}
 

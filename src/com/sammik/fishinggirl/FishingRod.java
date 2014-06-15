@@ -4,10 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 public class FishingRod extends GameObject {
 	public enum RodState { IDLE, CASTING, PULLING }
@@ -30,7 +28,7 @@ public class FishingRod extends GameObject {
 		poleEndY = getY() - 10;
 		
 		lure = new Lure(game, this, Lure.LureSize.SMALL);
-		game.spawn(lure, true);
+		game.spawn(lure);
 	}
 	
 	public boolean touchDown(int x, int y, int pointer, int button) {
@@ -75,22 +73,19 @@ public class FishingRod extends GameObject {
 		
 		poleEndX = (float) (getByOriginX() + r * Math.cos(2.0*Math.PI * (ang/360.0)));
 		poleEndY = (float) (getByOriginY() + r * Math.sin(2.0*Math.PI * (ang/360.0)));
+		
+		if (lure != null) {
+			lure.update();
+		}
 	}
 	
 	public void cast() {
 		rodState = RodState.CASTING;
 	}
 	
-	public void draw(SpriteBatch batch) {
-		super.draw(batch);
-		batch.end();
-		ShapeRenderer shapeRenderer = new ShapeRenderer();
-		shapeRenderer.begin(ShapeType.Line);
-		shapeRenderer.setColor(Color.BLACK);
-		shapeRenderer.setProjectionMatrix(game.getCamera().combined);
-		shapeRenderer.line(poleEndX, poleEndY, lure.getX() + lure.getWidth() / 2, lure.getY() + lure.getHeight() / 2);
-		shapeRenderer.end();
-		batch.begin();
+	public void drawLines(ShapeRenderer lineRenderer) {
+		lineRenderer.setColor(Color.BLACK);
+		lineRenderer.line(poleEndX, poleEndY, lure.getX() + lure.getWidth() / 2, lure.getY() + lure.getHeight() / 2);
 	}
 	
 	public void pullBack() {
@@ -120,7 +115,7 @@ public class FishingRod extends GameObject {
 	}
 
 	public boolean hasAttachedLure() {
-		return false;
+		return lure != null && lure.isAttached();
 	}
 
 }

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -156,12 +155,9 @@ public class Lure extends GameObject{
 		this.pullAmount = amount;
 	}
 	
-	public void debugDraw(ShapeRenderer shapeRenderer) {
+	public void debugDraw(ShapeRenderer lineRenderer) {
 		final Rectangle colliderBounds = collider.getWorldCollisionRectangle();
-		shapeRenderer.setProjectionMatrix(game.camera.combined);
-		shapeRenderer.begin(ShapeType.Line);
-		shapeRenderer.setColor(Color.GREEN);
-		shapeRenderer.rect(colliderBounds.x, colliderBounds.y, colliderBounds.width, colliderBounds.height);
-		shapeRenderer.end();
+		lineRenderer.setColor(Color.GREEN);
+		lineRenderer.rect(colliderBounds.x, colliderBounds.y, colliderBounds.width, colliderBounds.height);
 	}
 }

@@ -78,6 +78,9 @@ public class GameObject extends Sprite {
 
 	public void update() {
 	}
+	
+	public void drawLines(ShapeRenderer renderer) {
+	}
 
 	public void debugDraw(ShapeRenderer rectangleRenderer) {
 	}
