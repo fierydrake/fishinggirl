@@ -2,9 +2,7 @@ package com.sammik.fishinggirl.shop;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.sammik.fishinggirl.FishingGirlGame;
@@ -16,12 +14,10 @@ public class Shop extends GameObject{
 	private Type type;
 	
 	private ShopItem activeItem = null;
-	private ShapeRenderer shapeRenderer;
 	
 	public Shop(FishingGirlGame game, Type type, Texture texture, float x, float y) {
 		super(game, texture, x, y);
 		this.type = type;
-		shapeRenderer = new ShapeRenderer();
 	}
 	
 	public Rectangle getSpace() {
@@ -82,17 +78,10 @@ public class Shop extends GameObject{
 		activeItem = null;
 	}
 	
-	public void draw(SpriteBatch batch) {
-		super.draw(batch);
-		batch.end();
-		shapeRenderer.begin(ShapeType.Line);
-		shapeRenderer.setColor(Color.YELLOW);
-		shapeRenderer.setProjectionMatrix(game.camera.combined);
-		
+	public void drawLines(ShapeRenderer lineRenderer) {
 		if(activeItem != null) {
-			shapeRenderer.rect(activeItem.getLeft(), activeItem.getBottom(), activeItem.getWidth(), activeItem.getHeight());
+			lineRenderer.setColor(Color.YELLOW);
+			lineRenderer.rect(activeItem.getLeft(), activeItem.getBottom(), activeItem.getWidth(), activeItem.getHeight());
 		}
-		shapeRenderer.end();
-		batch.begin();
 	}
 }
