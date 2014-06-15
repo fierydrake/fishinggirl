@@ -31,7 +31,9 @@ public class FishingRod extends GameObject {
 		game.spawn(lure);
 	}
 	
+	private boolean touchDownLureAttached = false;
 	public boolean touchDown(int x, int y, int pointer, int button) {
+		touchDownLureAttached = lure.isAttached();
 		if (button == Input.Buttons.LEFT) {
 			lure.setPullAmount(5f);
 		} else {
@@ -42,10 +44,10 @@ public class FishingRod extends GameObject {
 	
 	public boolean touchUp(int x, int y, int pointer, int button) {
 		lure.setPullAmount(0);
-		if(rodState == RodState.PULLING && lure.isAttached()) {
+		if (rodState == RodState.PULLING && lure.isAttached()) {
 			cast();
 		}
-		else if(rodState == RodState.IDLE && lure.isAttached()){
+		else if (touchDownLureAttached && rodState == RodState.IDLE && lure.isAttached()){
 			rodState = RodState.PULLING;
 		}
 		return true;
