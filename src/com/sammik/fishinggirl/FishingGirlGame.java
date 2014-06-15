@@ -94,7 +94,7 @@ public class FishingGirlGame implements ApplicationListener {
 		//set up shop (guffaw)
 		shop = new Shop(this, Shop.Type.LURE_SHOP, assets.texture("shop"), 0, 0);
 		shopButton = new ShopButton(this, assets.texture("shopButton"), water.getCenterX(), water.getWaterLine(), shop);
-		spawn(shopButton, Layer.FOREGROUND);
+		spawn(shopButton, Layer.FOREGROUND, true);
 	}
 
 	public Water getWater() { return this.water; }

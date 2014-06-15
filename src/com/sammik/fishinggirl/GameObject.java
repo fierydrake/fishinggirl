@@ -1,5 +1,6 @@
 package com.sammik.fishinggirl;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -48,6 +49,9 @@ public class GameObject extends Sprite {
 		setPosition(x - getOriginX(), y - getOriginY());
 	}
 
+	public void setXByOrigin(final float x) { setX(x - getOriginX()); }
+	public void setYByOrigin(final float y) { setY(y - getOriginY()); }
+	
 	public float getByOriginX() { return getX() + getOriginX(); }
 	public float getByOriginY() { return getY() + getOriginY(); }
 	
@@ -82,6 +86,9 @@ public class GameObject extends Sprite {
 	public void drawLines(ShapeRenderer renderer) {
 	}
 
-	public void debugDraw(ShapeRenderer rectangleRenderer) {
+	public void debugDraw(ShapeRenderer lineRenderer) {
+		lineRenderer.setColor(Color.CYAN);
+		lineRenderer.circle(getByOriginX(), getByOriginY(), 2);
+		lineRenderer.rect(getX(),  getY(),  getWidth(),  getHeight());
 	}
 }
