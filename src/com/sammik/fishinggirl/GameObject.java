@@ -76,7 +76,9 @@ public class GameObject extends Sprite {
 		return bounds.y + bounds.height / 2f;
 	}
 
-	public void debugDraw(ShapeRenderer rectangleRenderer) {
+	public void update() {
 	}
 
+	public void debugDraw(ShapeRenderer rectangleRenderer) {
+	}
 }

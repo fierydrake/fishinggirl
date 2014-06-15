@@ -125,7 +125,7 @@ public class Lure extends GameObject{
 		} 
 	}
 	
-	public void Cast(int force) {
+	public void cast(int force) {
 		this.velX = force * 5;
 		this.velY = 0;
 		isCasting = true;
