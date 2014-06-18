@@ -36,6 +36,7 @@ public class FishingGirlGame implements ApplicationListener {
 	private Water water;
 	private Player player; 
 	private FishingRod fishingRod;
+	private Shop lureShop, rodShop;
 	private boolean debugMode;
 
 	private List<GameObject> backgroundLayer = new ArrayList<GameObject>();
@@ -71,6 +72,7 @@ public class FishingGirlGame implements ApplicationListener {
 		background = new GameObject(this, assets.texture("background"), 0, cliff.getTop() - 50);
 		final Texture waterTexture = assets.texture("water");
 		water = new Water(this, waterTexture, cliff.getRight() - 60, -200, waterTexture.getWidth()*2f, waterTexture.getHeight());
+		final Water waterOverlay = new Water(this, waterTexture, cliff.getRight() - 60, -200, waterTexture.getWidth()*2f, waterTexture.getHeight(), 0.25f);
 		fishingRod = new FishingRod(this, cliff.getRight() - 45, cliff.getTop() + 10);
 		player = new Player(this, assets.texture("player"), cliff.getRight() - 80, cliff.getTop());
 
@@ -80,21 +82,28 @@ public class FishingGirlGame implements ApplicationListener {
 			spawn(fishie, true);
 		}
 
+		//set up shop (guffaw)
+		rodShop = new Shop(this, Shop.Type.ROD_SHOP, assets.texture("shopButton"), assets.texture("shopTipRod"), cliff.getRight() + 512f, water.getWaterLine());
+		spawn(rodShop, Layer.BASE, true);
+		
+		lureShop = new Shop(this, Shop.Type.LURE_SHOP, assets.texture("shopButton"), assets.texture("shopTipLure"), water.getCenterX(), water.getWaterLine());
+		spawn(lureShop, Layer.BASE, true);
+//		Shop lureShop = new Shop(this, Shop.Type.LURE_SHOP, assets.texture("shop"), 0, 0);
+//		Shop rodShop = new Shop(this, Shop.Type.ROD_SHOP, assets.texture("shop"), 0, 0);
+//		shopButton = new ShopButton(this, assets.texture("shopButton"), water.getCenterX(), water.getWaterLine(), shop);
+//		spawn(shopButton, Layer.FOREGROUND, true);
+		spawn(waterOverlay, Layer.BASE);
+
 		spawn(background, Layer.BACKGROUND);
 		spawn(water, Layer.BACKGROUND);
 		float x = 40, y = cliff.getTop();
-		baseLayer.add(new GameObject(this, assets.texture("smallTree"), x, y, 0, 74)); x+=assets.texture("smallTree").getWidth();
-		baseLayer.add(new GameObject(this, assets.texture("largeTree"), x, y, 0, 4)); x+=assets.texture("largeTree").getWidth();
-		baseLayer.add(new GameObject(this, assets.texture("lodge"), x, y, 0, 80)); x+=assets.texture("lodge").getWidth();
-		baseLayer.add(new GameObject(this, assets.texture("house"), x - 30, y, 0, 10)); x+=assets.texture("house").getWidth();
-		spawn(cliff);
+		spawn(new GameObject(this, assets.texture("smallTree"), x, y, 0, 74), Layer.BASE); x+=assets.texture("smallTree").getWidth();
+		spawn(new GameObject(this, assets.texture("largeTree"), x, y, 0, 4), Layer.BASE); x+=assets.texture("largeTree").getWidth();
+		spawn(new GameObject(this, assets.texture("lodge"), x, y, 0, 80), Layer.BASE); x+=assets.texture("lodge").getWidth();
+		spawn(new GameObject(this, assets.texture("house"), x - 30, y, 0, 10), Layer.BASE); x+=assets.texture("house").getWidth();
+		spawn(cliff, Layer.FOREGROUND);
 		spawn(fishingRod, Layer.FOREGROUND, true);
 		spawn(player, Layer.FOREGROUND, true);
-
-		//set up shop (guffaw)
-		shop = new Shop(this, Shop.Type.LURE_SHOP, assets.texture("shop"), 0, 0);
-		shopButton = new ShopButton(this, assets.texture("shopButton"), water.getCenterX(), water.getWaterLine(), shop);
-		spawn(shopButton, Layer.FOREGROUND, true);
 	}
 
 	public Water getWater() { return this.water; }
@@ -221,12 +230,10 @@ public class FishingGirlGame implements ApplicationListener {
 			if (button == Input.Buttons.LEFT) {
 				Vector3 v = new Vector3(screenX, screenY, 0);
 				camera.unproject(v);
-				if(Collider.isColliding(new Vector2(v.x, v.y), shopButton)) {
-					System.out.println("Clicked on shop button!");
-					shopButton.click();
-				} else if(Collider.isColliding(new Vector2(v.x, v.y), shop.getSpace())) {
-					System.out.println("Clicked on shop!");
-					shop.click(new Vector2(v.x, v.y));
+				if (Collider.isColliding(new Vector2(v.x, v.y), lureShop)) {
+					lureShop.click(new Vector2(v.x, v.y));
+				} else if(Collider.isColliding(new Vector2(v.x, v.y), rodShop)) {
+					rodShop.click(new Vector2(v.x, v.y));
 				} else {
 					return fishingRod.touchUp(screenX, screenY, pointer, button);
 				}

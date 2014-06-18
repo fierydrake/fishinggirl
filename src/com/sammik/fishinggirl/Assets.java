@@ -43,6 +43,8 @@ public class Assets {
 		load("player", "bearPurple.png");
 		load("shopButton", "storeContainer.png");
 		load("shop", "purchasedialog.png");
+		load("shopTipRod", "rodshoptip.png");
+		load("shopTipLure", "lureshoptip.png");
 		load("bombLure", "lureBomb.png");
 	}
 
