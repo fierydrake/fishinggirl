@@ -75,18 +75,4 @@ public abstract class Fish extends GameObject{
 		}
 	}
 	
-	public void debugDraw(ShapeRenderer shapeRenderer) {
-		final Rectangle[] collidersToDraw = new Rectangle[] {
-				getEatCollider().getWorldCollisionRectangle(),
-				getSeeCollider().getWorldCollisionRectangle() };
-		final Color[] colours = new Color[] { Color.GREEN, Color.BLUE };
-		shapeRenderer.setProjectionMatrix(game.camera.combined);
-		shapeRenderer.begin(ShapeType.Line);
-		for (int i=0; i< collidersToDraw.length; i++) {
-			final Rectangle collider = collidersToDraw[i];
-			shapeRenderer.setColor(colours[i]);
-			shapeRenderer.rect(collider.x, collider.y, collider.width, collider.height);
-		}
-		shapeRenderer.end();
-	}
 }
