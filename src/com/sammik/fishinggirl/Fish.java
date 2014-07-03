@@ -29,6 +29,9 @@ public class Fish extends GameObject{
 		setPosition(newX, getY() + direction.y * Gdx.graphics.getDeltaTime() * speed);
 	}
 	
+	public Collider getSeeCollider() { return new Collider(this,0,0,0,0); } // TODO
+	public Collider getEatCollider() { return new Collider(this,0,0,0,0); } // TODO
+	
 	public static Type randomType() {
 		final double random = Math.random();
 		if (random < 0.1) return Type.LARGE;
