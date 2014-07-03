@@ -95,12 +95,6 @@ public class Lure extends GameObject{
 	}
 	
 	public void update() {
-		for(int i = 0; i < game.getFishies().size(); i++) {
-			if(Collider.isColliding(this, game.getFishies().get(i))) {
-				if(debug)	System.out.println("COLLIDING WITH FISH " + i + "!");
-			}
-		}
-		
 		// Transitions
 		if (isSubmerging()) { submerge(); }
 		else if (isSurfacing()) { surface(); }
@@ -121,7 +115,23 @@ public class Lure extends GameObject{
 			isAttached = true;
 			isCasting = false;
 			onScreen = false;
-		} 
+		}
+		
+		// Collisions
+		if (collider.isCollidingWith(game.getLureShop().getCollider())) {
+			game.pushMessage("LURE SHOP");
+		}
+		if (collider.isCollidingWith(game.getRodShop().getCollider())) {
+			game.pushMessage("ROD SHOP");
+		}
+		for(int i = 0; i < game.getFishies().size(); i++) {
+			if(collider.isCollidingWith(game.getFishies().get(i).getEatCollider())) {
+				game.pushMessage("FISH EAT");
+			} else 
+			if(collider.isCollidingWith(game.getFishies().get(i).getSeeCollider())) {
+				game.pushMessage("FISH SEE");
+			}
+		}
 	}
 	
 	public void cast(int force) {
