@@ -1,6 +1,7 @@
 package com.sammik.fishinggirl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -11,13 +12,15 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.sammik.fishinggirl.shop.Shop;
-import com.sammik.fishinggirl.shop.ShopButton;
 import com.sammik.fishinggirl.shop.ShopItem;
 
 public class FishingGirlGame implements ApplicationListener {
@@ -29,15 +32,16 @@ public class FishingGirlGame implements ApplicationListener {
 
 	public Assets assets;
 	public OrthographicCamera camera;
-	private SpriteBatch batch;
+	private SpriteBatch gameBatch, uiBatch;
 	private ShapeRenderer lineRenderer;
+	private BitmapFont font;
 	private GameObject background;
 	private Ground cliff;
 	private Water water;
 	private Player player; 
 	private FishingRod fishingRod;
 	private Shop lureShop, rodShop;
-	private boolean debugMode;
+	private boolean debugMode, showFPS;
 
 	private List<GameObject> backgroundLayer = new ArrayList<GameObject>();
 	private List<GameObject> baseLayer = new ArrayList<GameObject>();
@@ -46,9 +50,8 @@ public class FishingGirlGame implements ApplicationListener {
 	private List<Fish> fishies = new ArrayList<Fish>();
 	private List<ShopItem> shopItems = new ArrayList<ShopItem>();
 
-	private ShopButton shopButton;
-	private Shop shop;
-
+	private Matrix4 def;
+	
 	@Override
 	public void create() {
 		// FIXME LATER: ignore window size for now. Assume it matches world size 
@@ -61,12 +64,16 @@ public class FishingGirlGame implements ApplicationListener {
 		Gdx.input.setInputProcessor(inputProcessor);
 
 		debugMode = false;
+		showFPS = false;
 		assets = new Assets();
 		camera = new OrthographicCamera(w, h);
 		camera.translate(w/2f + 512, -h/2f + 2048);
 		camera.update();
-		batch = new SpriteBatch();
+		gameBatch = new SpriteBatch();
+		uiBatch = new SpriteBatch();
 		lineRenderer = new ShapeRenderer();
+		font = new BitmapFont();
+//		font.setScale(2f);
 
 		cliff = new Ground(this, assets.texture("cliff"), 0, 0);
 		background = new GameObject(this, assets.texture("background"), 0, cliff.getTop() - 50);
@@ -88,11 +95,7 @@ public class FishingGirlGame implements ApplicationListener {
 		
 		lureShop = new Shop(this, Shop.Type.LURE_SHOP, assets.texture("shopButton"), assets.texture("shopTipLure"), water.getCenterX(), water.getWaterLine());
 		spawn(lureShop, Layer.BASE, true);
-//		Shop lureShop = new Shop(this, Shop.Type.LURE_SHOP, assets.texture("shop"), 0, 0);
-//		Shop rodShop = new Shop(this, Shop.Type.ROD_SHOP, assets.texture("shop"), 0, 0);
-//		shopButton = new ShopButton(this, assets.texture("shopButton"), water.getCenterX(), water.getWaterLine(), shop);
-//		spawn(shopButton, Layer.FOREGROUND, true);
-		spawn(waterOverlay, Layer.BASE);
+		spawn(waterOverlay, Layer.BASE); // only covers shops (and normal water) atm
 
 		spawn(background, Layer.BACKGROUND);
 		spawn(water, Layer.BACKGROUND);
@@ -104,11 +107,15 @@ public class FishingGirlGame implements ApplicationListener {
 		spawn(cliff, Layer.FOREGROUND);
 		spawn(fishingRod, Layer.FOREGROUND, true);
 		spawn(player, Layer.FOREGROUND, true);
+		
+		pushMessage("Welcome to Fishing Girl");
 	}
 
 	public Water getWater() { return this.water; }
 	public Ground getCliff() { return this.cliff; }
 	public List<Fish> getFishies() { return fishies; }
+	public Shop getLureShop() { return lureShop; }
+	public Shop getRodShop() { return rodShop; }
 	public Player getPlayer() { return player; }
 
 	public void spawn(final GameObject obj, final Layer layer, boolean active) {
@@ -141,10 +148,48 @@ public class FishingGirlGame implements ApplicationListener {
 		backgroundLayer.remove(obj);
 		activeObjects.remove(obj);
 	}
+	
+	private static class Message {
+		public String text;
+		public float timeUntilDeath;
+		public Message(final String msg) {
+			text = msg;
+			timeUntilDeath = 4f;
+		}
+	}
+	private List<Message> messages = new ArrayList<Message>();
+	public void pushMessage(final String message) {
+		messages.add(new Message(message));
+	}
+	
+	private void drawFPS(final SpriteBatch batch) {
+		font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 4f,
+				Gdx.graphics.getHeight() - 4f);
+	}
+	private void drawMessages(final SpriteBatch batch) {
+		float cursorY = 0;
+		final float paddingTop = 4f;
+		Iterator<Message> i = messages.iterator();
+		while (i.hasNext()) {
+			final Message message = i.next();
+			message.timeUntilDeath -= Gdx.graphics.getDeltaTime();
+			if (message.timeUntilDeath > 0) {
+				final TextBounds bounds = font.getBounds(message.text);
+				font.draw(batch, message.text,
+						(Gdx.graphics.getWidth() - bounds.width) / 2f,
+						Gdx.graphics.getHeight() - paddingTop - cursorY);
+				cursorY += bounds.height + paddingTop;
+			} else {
+				i.remove();
+			}
+		}
+	}
 
 	@Override
 	public void dispose() {
-		batch.dispose();
+		gameBatch.dispose();
+		uiBatch.dispose();
+		font.dispose();
 		assets.disposeAll();
 	}
 
@@ -153,7 +198,7 @@ public class FishingGirlGame implements ApplicationListener {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
-		batch.setProjectionMatrix(camera.combined);
+		gameBatch.setProjectionMatrix(camera.combined);
 		lineRenderer.setProjectionMatrix(camera.combined);
 		
 		// logic
@@ -162,12 +207,12 @@ public class FishingGirlGame implements ApplicationListener {
 		}
 
 		// render
-		batch.begin();
-		background.draw(batch);
-		for (final GameObject s : backgroundLayer) s.draw(batch);
-		for (final GameObject s : baseLayer) s.draw(batch);
-		for (final GameObject s : foregroundLayer) s.draw(batch);
-		batch.end();
+		gameBatch.begin();
+		background.draw(gameBatch);
+		for (final GameObject s : backgroundLayer) s.draw(gameBatch);
+		for (final GameObject s : baseLayer) s.draw(gameBatch);
+		for (final GameObject s : foregroundLayer) s.draw(gameBatch);
+		gameBatch.end();
 		
 		lineRenderer.begin(ShapeType.Line);
 		for (final GameObject s : backgroundLayer) s.drawLines(lineRenderer);
@@ -181,6 +226,11 @@ public class FishingGirlGame implements ApplicationListener {
 			for (final GameObject s : foregroundLayer) s.debugDraw(lineRenderer);
 		}
 		lineRenderer.end();
+		
+		uiBatch.begin();
+		drawMessages(uiBatch);
+		if (showFPS) drawFPS(uiBatch);
+		uiBatch.end();
 	}
 
 	@Override
@@ -219,9 +269,8 @@ public class FishingGirlGame implements ApplicationListener {
 
 		@Override
 		public boolean keyTyped(char character) {
-			if (character == 'd' || character == 'D') {
-				debugMode = !debugMode;
-			}
+			if (character == 'd' || character == 'D') debugMode = !debugMode;
+			if (character == 'f' || character == 'F') showFPS = !showFPS;
 			return false;
 		}
 
