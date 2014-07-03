@@ -20,12 +20,8 @@ public abstract class Fish extends GameObject{
 
 	public Fish(FishingGirlGame game, Texture texture, float x, float y) {
 		super(game, texture, x, y);
-		direction = new Vector2(((new Random().nextInt(2) == 1) ? -1 : 1), 0);
-		mouthPosition = new Vector2(getLeft(), getCenterY());
-		if(direction.x > 0) { 
-			flip(true, false);
-			mouthPosition = new Vector2(getRight(), getCenterY());
-		}
+		direction = new Vector2(new Random().nextInt(2) == 1 ? -1 : 1, 0);
+		updateFacing();
 	}
 	
 	protected abstract Collider getEatCollider();
@@ -34,11 +30,24 @@ public abstract class Fish extends GameObject{
 	public void update(){
 		float newX = getX() + direction.x * Gdx.graphics.getDeltaTime() * speed;
 		if (newX < game.getCliff().getRight() || newX > game.getWater().getRight()) {
-			direction.x *= -1;
 			newX = getX() + direction.x * Gdx.graphics.getDeltaTime() * speed;
-			flip(true, false);
+			switchDirection();
 		}
 		setPosition(newX, getY() + direction.y * Gdx.graphics.getDeltaTime() * speed);
+	}
+	
+	public void switchDirection() {
+		direction.x *= -1;
+		flip(true, false);
+		updateFacing();
+	}
+
+	private void updateFacing() {
+		if(direction.x > 0) {
+			mouthPosition = new Vector2(getX() - getRight(), getY() - getCenterY());
+		} else { 
+			mouthPosition = new Vector2(getLeft() - getX(), getCenterY() - getY());
+		}
 	}
 	
 	public static Type randomType() {
