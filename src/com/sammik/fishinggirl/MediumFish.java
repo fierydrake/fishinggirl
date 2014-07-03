@@ -2,6 +2,7 @@ package com.sammik.fishinggirl;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 public class MediumFish extends Fish {
 	private Rectangle eatColliderBounds = new Rectangle(mouthPosition.x, mouthPosition.y, 50, 50);
@@ -10,7 +11,7 @@ public class MediumFish extends Fish {
 	private Collider seeCollider = new Collider(this, seeColliderBounds.x, seeColliderBounds.y, seeColliderBounds.width, seeColliderBounds.height);
 	
 	public MediumFish(FishingGirlGame game, final Texture texture, final float x, float y){
-		super(game, texture, x, y);
+		super(game, texture, x, y, new Vector2(10, 0));
 		speed = 45.0f;
 	}
 	

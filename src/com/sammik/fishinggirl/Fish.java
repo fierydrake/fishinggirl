@@ -14,18 +14,24 @@ public abstract class Fish extends GameObject{
 	public enum Type {
 		SMALL, MEDIUM, LARGE
 	}
+	private boolean flipped = false;
 	private Vector2 direction;
 	protected Vector2 mouthPosition;
 	protected float speed = 30.0f;
 
-	public Fish(FishingGirlGame game, Texture texture, float x, float y) {
+	public Fish(FishingGirlGame game, Texture texture, float x, float y, Vector2 mouthPosition) {
 		super(game, texture, x, y);
-		direction = new Vector2(new Random().nextInt(2) == 1 ? -1 : 1, 0);
-		updateFacing();
+		this.mouthPosition = mouthPosition;
+		direction = new Vector2(-1, 0);
+		if (new Random().nextInt(2) == 1) {
+			switchDirection();
+		}
 	}
 	
 	protected abstract Collider getEatCollider();
 	protected abstract Collider getSeeCollider();
+	
+	protected boolean isFlipped() { return flipped; }
 	
 	public void update(){
 		float newX = getX() + direction.x * Gdx.graphics.getDeltaTime() * speed;
@@ -39,17 +45,9 @@ public abstract class Fish extends GameObject{
 	public void switchDirection() {
 		direction.x *= -1;
 		flip(true, false);
-		updateFacing();
+		flipped = !flipped;
+		mouthPosition.x = -mouthPosition.x;
 	}
-
-	private void updateFacing() {
-		if(direction.x > 0) {
-			mouthPosition = new Vector2(getX() - getRight(), getY() - getCenterY());
-		} else { 
-			mouthPosition = new Vector2(getLeft() - getX(), getCenterY() - getY());
-		}
-	}
-	
 	
 	public static Type randomType() {
 		final double random = Math.random();
@@ -74,6 +72,16 @@ public abstract class Fish extends GameObject{
 		default:
 			return null;
 		}
+	}
+	
+	@Override
+	public void debugDraw(ShapeRenderer lineRenderer) {
+		super.debugDraw(lineRenderer);
+		lineRenderer.setColor(Color.GREEN);
+		Rectangle r = getEatCollider().getWorldCollisionRectangle();
+		lineRenderer.rect(r.x, r.y, r.width, r.height);
+		r = getSeeCollider().getWorldCollisionRectangle();
+		lineRenderer.rect(r.x, r.y, r.width, r.height);
 	}
 	
 }
