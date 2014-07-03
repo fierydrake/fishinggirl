@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.sammik.fishinggirl.Collider;
 import com.sammik.fishinggirl.FishingGirlGame;
 import com.sammik.fishinggirl.GameObject;
 import com.sammik.fishinggirl.Lure.LureSize;
@@ -26,12 +27,15 @@ public class Shop extends GameObject {
 	float bobAmplitude = 10f;
 	float t = new Random().nextFloat() * (float)Math.PI;
 	float initialY;
+	
+	Collider collider;
 
 	private ShopItem activeItem = null;
 	
 	public Shop(FishingGirlGame game, Type type, Texture texture, Texture tipTexture, float x, float y) {
 		super(game, texture, x, y, texture.getWidth() / 2f, texture.getHeight() / 2f);
 		tooltipTexture = tipTexture;
+		collider = new Collider(this, -getWidth() / 2f, -getHeight() / 2f, getWidth(), getHeight());
 		this.initialY = y;
 		this.type = type;
 	}
@@ -51,6 +55,8 @@ public class Shop extends GameObject {
 		}
 	}
 
+	public Collider getCollider() { return collider; }
+	
 	public Rectangle getSpace() {
 		float top = getTop() - 64, bottom = getBottom() + 95;
 		float left = getLeft();
@@ -110,10 +116,19 @@ public class Shop extends GameObject {
 		activeItem = null;
 	}
 	
+	@Override
 	public void drawLines(ShapeRenderer lineRenderer) {
 		if(activeItem != null) {
 			lineRenderer.setColor(Color.YELLOW);
 			lineRenderer.rect(activeItem.getLeft(), activeItem.getBottom(), activeItem.getWidth(), activeItem.getHeight());
 		}
+	}
+	
+	@Override
+	public void debugDraw(ShapeRenderer lineRenderer) {
+		super.debugDraw(lineRenderer);
+		lineRenderer.setColor(Color.GREEN);
+		final Rectangle r = collider.getWorldCollisionRectangle();
+		lineRenderer.rect(r.x, r.y, r.width, r.height);
 	}
 }
