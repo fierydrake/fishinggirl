@@ -50,6 +50,7 @@ public abstract class Fish extends GameObject{
 		}
 	}
 	
+	
 	public static Type randomType() {
 		final double random = Math.random();
 		if (random < 0.1) return Type.LARGE;

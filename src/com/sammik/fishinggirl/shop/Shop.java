@@ -1,24 +1,61 @@
 package com.sammik.fishinggirl.shop;
 
+import java.util.Random;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.sammik.fishinggirl.Collider;
 import com.sammik.fishinggirl.FishingGirlGame;
 import com.sammik.fishinggirl.GameObject;
 import com.sammik.fishinggirl.Lure.LureSize;
 
-public class Shop extends GameObject{
+public class Shop extends GameObject {
 	public enum Type { LURE_SHOP, ROD_SHOP }
 	private Type type;
 	
+	Texture tooltipTexture;
+	float padding = 2f;
+	float showTooltipFor = 4f;
+	float showTooltipTime = 0f;
+	
+	float bobSpeed = 2f;
+	float bobAmplitude = 10f;
+	float t = new Random().nextFloat() * (float)Math.PI;
+	float initialY;
+	
+	Collider collider;
+
 	private ShopItem activeItem = null;
 	
-	public Shop(FishingGirlGame game, Type type, Texture texture, float x, float y) {
-		super(game, texture, x, y);
+	public Shop(FishingGirlGame game, Type type, Texture texture, Texture tipTexture, float x, float y) {
+		super(game, texture, x, y, texture.getWidth() / 2f, texture.getHeight() / 2f);
+		tooltipTexture = tipTexture;
+		collider = new Collider(this, -getWidth() / 2f, -getHeight() / 2f, getWidth(), getHeight());
+		this.initialY = y;
 		this.type = type;
 	}
+	
+	@Override
+	public void update() {
+		t += bobSpeed * Gdx.graphics.getRawDeltaTime();
+		if (t > 2f*Math.PI) { t -= 2f*Math.PI; }
+		setYByOrigin(initialY + bobAmplitude * (float)Math.sin(t));
+	}
+	
+	public void draw(SpriteBatch batch) {
+		super.draw(batch);
+		if (showTooltipTime > 0f) {
+			batch.draw(tooltipTexture, getCenterX() - tooltipTexture.getWidth() / 2f, getTop() + padding);
+			showTooltipTime -= Gdx.graphics.getRawDeltaTime();
+		}
+	}
+
+	public Collider getCollider() { return collider; }
 	
 	public Rectangle getSpace() {
 		float top = getTop() - 64, bottom = getBottom() + 95;
@@ -27,6 +64,7 @@ public class Shop extends GameObject{
 	}
 	
 	public void click(Vector2 vec) {
+		showTooltipTime = showTooltipFor;
 	}
 
 
@@ -78,10 +116,19 @@ public class Shop extends GameObject{
 		activeItem = null;
 	}
 	
+	@Override
 	public void drawLines(ShapeRenderer lineRenderer) {
 		if(activeItem != null) {
 			lineRenderer.setColor(Color.YELLOW);
 			lineRenderer.rect(activeItem.getLeft(), activeItem.getBottom(), activeItem.getWidth(), activeItem.getHeight());
 		}
+	}
+	
+	@Override
+	public void debugDraw(ShapeRenderer lineRenderer) {
+		super.debugDraw(lineRenderer);
+		lineRenderer.setColor(Color.GREEN);
+		final Rectangle r = collider.getWorldCollisionRectangle();
+		lineRenderer.rect(r.x, r.y, r.width, r.height);
 	}
 }

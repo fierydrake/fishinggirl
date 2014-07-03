@@ -14,10 +14,15 @@ public class Water extends GameObject {
 	 */
 	final float widthExtent;
 	final float heightExtent;
+	final float opacity;
 	public Water(final FishingGirlGame game, final Texture texture, final float x, final float y, final float w, final float h) {
+		this(game, texture, x, y, w, h, 1f);
+	}
+	public Water(final FishingGirlGame game, final Texture texture, final float x, final float y, final float w, final float h, final float opacity) {
 		super(game, texture, x, y);
 		widthExtent = w;
 		heightExtent = h;
+		this.opacity = opacity;
 	}
 
 	public float getWidth() { return widthExtent; }
@@ -46,7 +51,9 @@ public class Water extends GameObject {
 				// Tile
 				float drawWidth = Math.min(remainingWidth, w);
 				float drawHeight = Math.min(remainingHeight, h);
+				batch.setColor(1f, 1f, 1f, opacity);
 				batch.draw(getTexture(), getX() + offsetX, getY() + offsetY, 0, 0, (int)drawWidth, (int)drawHeight);
+				batch.setColor(Color.WHITE);
 				remainingWidth -= drawWidth;
 				offsetX += drawWidth;
 				if (remainingWidth <= 0f) {
