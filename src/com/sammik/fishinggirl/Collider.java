@@ -12,7 +12,6 @@ public class Collider {
 		collisionBounds = new Rectangle(x, y, w, h);
 	}
 	
-	
 	public boolean isCollidingWith(Collider other) {
 		return getWorldCollisionRectangle().overlaps(other.getWorldCollisionRectangle());
 	}

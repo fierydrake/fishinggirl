@@ -5,23 +5,32 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class SmallFish extends Fish{
-	private Rectangle eatColliderBounds = new Rectangle(mouthPosition.x, mouthPosition.y, 50, 50);
-	private Rectangle seeColliderBounds = new Rectangle(mouthPosition.x, mouthPosition.y, 200, 50);
-	private Collider eatCollider = new Collider(this, eatColliderBounds.x, eatColliderBounds.y, eatColliderBounds.width, eatColliderBounds.height);
-	private Collider seeCollider = new Collider(this, seeColliderBounds.x, seeColliderBounds.y, seeColliderBounds.width, seeColliderBounds.height);
+	private float mouthSize = 7f;
+	private Collider seeCollider = new Collider(this, 0, 0, 1, 1);
 	
 	public SmallFish(final FishingGirlGame game, final Texture texture, final float x, float y) {
-		super(game, texture, x, y, new Vector2(10, 0));
+		super(game, texture, x, y, getMouthPositionForTexture(game, texture));
 		speed = 60.0f;
 	}
 	
 	@Override
 	protected Collider getEatCollider() {
-		return eatCollider;
+		return new Collider(this, mouthPosition.x - mouthSize / 2f, mouthPosition.y - mouthSize / 2f, mouthSize, mouthSize);
 	}
 	
 	@Override
 	protected Collider getSeeCollider() {
 		return seeCollider;
 	}
+	
+	private static Vector2 getMouthPositionForTexture(FishingGirlGame game, Texture texture) {
+		return calculateRelativeMouthPosFromAbsValues(5, 26, texture);
+	}
+	
+	private static Vector2 calculateRelativeMouthPosFromAbsValues(float px, float py, Texture texture) {
+		float x = -(texture.getWidth() / 2f - px);
+		float y = -(py - texture.getHeight() / 2f);
+		return new Vector2(x, y);
+	}
+	
 }

@@ -10,11 +10,10 @@ public class LargeFish extends Fish {
 //	private Collider seeCollider = new Collider(this, seeColliderBounds.x, seeColliderBounds.y, seeColliderBounds.width, seeColliderBounds.height);
 	
 	private float mouthSize = 24f;
-	private Collider eatCollider;
 	private Collider seeCollider = new Collider(this, 1, 1, 2, 2);
 
 	public LargeFish(final FishingGirlGame game, final Texture texture, final float x, float y){
-		super(game, texture, x, y, new Vector2(-68f, -14f));
+		super(game, texture, x, y, getMouthPositionForTexture(game, texture));
 	}
 
 	@Override
@@ -27,4 +26,24 @@ public class LargeFish extends Fish {
 		return seeCollider;
 	}
 	
+	private static Vector2 getMouthPositionForTexture(FishingGirlGame game, Texture texture) {
+		Vector2 vec;
+		if(texture == game.assets.texture("largeFish1")) {
+			vec = calculateRelativeMouthPosFromAbsValues(35, 60, texture);
+		} else if(texture == game.assets.texture("largeFish2")) {
+			vec = calculateRelativeMouthPosFromAbsValues(25, 70, texture);
+		} else if(texture == game.assets.texture("largeFish3")) {
+			vec = calculateRelativeMouthPosFromAbsValues(25, 60, texture);			
+		} else {
+			vec = calculateRelativeMouthPosFromAbsValues(27, 75, texture);
+		}
+		return vec;
+	}
+	
+	private static Vector2 calculateRelativeMouthPosFromAbsValues(float px, float py, Texture texture) {
+		float x = -(texture.getWidth() / 2f - px);
+		float y = -(py - texture.getHeight() / 2f);
+		return new Vector2(x, y);
+	}
+ 	
 }
