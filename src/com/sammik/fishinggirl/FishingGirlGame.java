@@ -277,9 +277,9 @@ public class FishingGirlGame implements ApplicationListener {
 			if (button == Input.Buttons.LEFT) {
 				Vector3 v = new Vector3(screenX, screenY, 0);
 				camera.unproject(v);
-				if (Collider.isColliding(new Vector2(v.x, v.y), lureShop)) {
+				if (lureShop.getCollider().isCollidingWith(v.x, v.y)) {
 					lureShop.click(new Vector2(v.x, v.y));
-				} else if(Collider.isColliding(new Vector2(v.x, v.y), rodShop)) {
+				} else if (rodShop.getCollider().isCollidingWith(v.x, v.y)) {
 					rodShop.click(new Vector2(v.x, v.y));
 				} else {
 					return fishingRod.touchUp(screenX, screenY, pointer, button);
