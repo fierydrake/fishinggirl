@@ -10,6 +10,7 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 // Should probably use the libgdx asset manager stuff
 public class Assets {
@@ -41,8 +42,8 @@ public class Assets {
 		load("mediumLure", "lureMedium.png");
 		load("largeLure", "lureLarge.png");
 		load("player", "bearPurple.png");
-		load("shopButton", "storeContainer.png");
-		load("shop", "purchasedialog.png");
+		load("shop", "storeContainer.png");
+		load("shopPurchase", "purchasedialog.png");
 		load("shopTipRod", "rodshoptip.png");
 		load("shopTipLure", "lureshoptip.png");
 		load("bombLure", "lureBomb.png");
@@ -50,6 +51,10 @@ public class Assets {
 
 	public Texture texture(final String name) {
 		return textures.get(name);
+	}
+	
+	public BitmapFont font(final String name) {
+		return new BitmapFont();
 	}
 	
 	public Texture randomTextureStartingWith(final String startsWith) {
