@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
 public class Lure extends GameObject{
@@ -22,7 +22,7 @@ public class Lure extends GameObject{
 	private boolean isAttached, isCasting, isSubmerged, isTouchingCliff;
 	private float pullAmount;
 	private final float size = 50f;
-	private Collider collider = new Collider(this, -size/2f, -size/2f, size, size);
+	private RectangleCollider collider = new RectangleCollider(this, -size/2f, -size/2f, size, size);
 	
 	static boolean debug = false;
 	
@@ -164,10 +164,13 @@ public class Lure extends GameObject{
 	public void setPullAmount(float amount) {
 		this.pullAmount = amount;
 	}
-	
+
+	@Override
 	public void debugDraw(ShapeRenderer lineRenderer) {
-		final Rectangle colliderBounds = collider.getWorldCollisionRectangle();
+		super.debugDraw(lineRenderer);
+
+		final Polygon colliderPolygon = collider.getWorldCollisionPolygon();
 		lineRenderer.setColor(Color.GREEN);
-		lineRenderer.rect(colliderBounds.x, colliderBounds.y, colliderBounds.width, colliderBounds.height);
+		lineRenderer.polygon(colliderPolygon.getVertices());
 	}
 }
