@@ -19,8 +19,8 @@ public class SmallFish extends Fish{
 	}
 	
 	@Override
-	protected RectangleCollider getSeeCollider() {
-		return seeCollider;
+	protected Collider getSeeCollider() {
+		return new TriangleCollider(this, 0, 0, 125, 25, getDirection());
 	}
 	
 	private static Vector2 getMouthPositionForTexture(FishingGirlGame game, Texture texture) {

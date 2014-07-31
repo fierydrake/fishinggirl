@@ -22,8 +22,8 @@ public class LargeFish extends Fish {
 	}
 	
 	@Override
-	protected RectangleCollider getSeeCollider() {
-		return seeCollider;
+	protected Collider getSeeCollider() {
+		return new TriangleCollider(this, 0, 0, 300, 25, getDirection());
 	}
 	
 	private static Vector2 getMouthPositionForTexture(FishingGirlGame game, Texture texture) {

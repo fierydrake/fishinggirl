@@ -29,8 +29,12 @@ public abstract class Fish extends GameObject{
 		}
 	}
 	
-	protected abstract RectangleCollider getEatCollider();
-	protected abstract RectangleCollider getSeeCollider();
+	protected Vector2 getDirection() {
+		return flipped ? new Vector2(1, 0) : new Vector2(-1, 0); 
+	}
+	
+	protected abstract Collider getEatCollider();
+	protected abstract Collider getSeeCollider();
 	
 	protected boolean isFlipped() { return flipped; }
 	
