@@ -122,7 +122,7 @@ public class Lure extends GameObject{
 			game.pushMessage("LURE SHOP");
 		}
 		if (collider.isCollidingWith(game.getRodShop().getCollider())) {
-			game.pushMessage("ROD SHOP");
+			game.getRodShop().open();
 		}
 		for(int i = 0; i < game.getFishies().size(); i++) {
 			if(collider.isCollidingWith(game.getFishies().get(i).getEatCollider())) {

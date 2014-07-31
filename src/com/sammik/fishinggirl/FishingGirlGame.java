@@ -55,6 +55,7 @@ public class FishingGirlGame implements ApplicationListener {
 	@Override
 	public void create() {
 		// FIXME LATER: ignore window size for now. Assume it matches world size 
+
 		float w = Gdx.graphics.getWidth() * 1.8f;
 		float h = Gdx.graphics.getHeight() * 1.8f;
 		
@@ -88,10 +89,14 @@ public class FishingGirlGame implements ApplicationListener {
 		}
 
 		//set up shop (guffaw)
-		rodShop = new Shop(this, Shop.Type.ROD_SHOP, assets.texture("shopButton"), assets.texture("shopTipRod"), cliff.getRight() + 512f, water.getWaterLine());
+		rodShop = new Shop(this, Shop.Type.ROD_SHOP, 
+				assets.texture("shop"), assets.texture("shopTipRod"), assets.texture("shopPurchase"),
+				cliff.getRight() + 512f, water.getWaterLine());
 		spawn(rodShop, Layer.BASE, true);
 		
-		lureShop = new Shop(this, Shop.Type.LURE_SHOP, assets.texture("shopButton"), assets.texture("shopTipLure"), water.getCenterX(), water.getWaterLine());
+		lureShop = new Shop(this, Shop.Type.LURE_SHOP, 
+				assets.texture("shop"), assets.texture("shopTipLure"), assets.texture("shopPurchase"), 
+				water.getCenterX(), water.getWaterLine());
 		spawn(lureShop, Layer.BASE, true);
 		spawn(waterOverlay, Layer.BASE); // only covers shops (and normal water) atm
 

@@ -5,6 +5,7 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Polygon;
@@ -24,6 +25,9 @@ public class Shop extends GameObject {
 	float showTooltipFor = 4f;
 	float showTooltipTime = 0f;
 	
+	Texture purchaseTexture;
+	boolean open = false;
+	
 	float bobSpeed = 2f;
 	float bobAmplitude = 10f;
 	float t = new Random().nextFloat() * (float)Math.PI;
@@ -33,9 +37,11 @@ public class Shop extends GameObject {
 
 	private ShopItem activeItem = null;
 	
-	public Shop(FishingGirlGame game, Type type, Texture texture, Texture tipTexture, float x, float y) {
+	public Shop(FishingGirlGame game, Type type, Texture texture, Texture tipTexture, Texture purchaseTexture, float x, float y) {
 		super(game, texture, x, y, texture.getWidth() / 2f, texture.getHeight() / 2f);
-		tooltipTexture = tipTexture;
+
+		this.tooltipTexture = tipTexture;
+		this.purchaseTexture = purchaseTexture;
 		collider = new RectangleCollider(this, -getWidth() / 2f, -getHeight() / 2f, getWidth(), getHeight());
 		this.initialY = y;
 		this.type = type;
@@ -53,6 +59,23 @@ public class Shop extends GameObject {
 		if (showTooltipTime > 0f) {
 			batch.draw(tooltipTexture, getCenterX() - tooltipTexture.getWidth() / 2f, getTop() + padding);
 			showTooltipTime -= Gdx.graphics.getRawDeltaTime();
+		}
+		if (open) {
+			float textureLeft = getCenterX() - purchaseTexture.getWidth() / 2f - 9f;
+			float textureTop = getTop() + padding + purchaseTexture.getHeight();
+			batch.draw(purchaseTexture, textureLeft, getTop() + padding);
+			activeItem = new ShopItem(game, game.assets.texture("fishingRod"), ShopConfig.SILVER_ROD);
+//			activeItem.setPositionByOrigin(getCenterX(), getTop() + purchaseTexture.getHeight() / 2f);
+//			activeItem.draw(batch);
+			batch.draw(activeItem, getCenterX() - activeItem.getWidth() / 2f - 9f, getTop() + (purchaseTexture.getHeight() - activeItem.getHeight()) / 2f);
+			BitmapFont font = game.assets.font("dialog");
+			font.setScale(1.6f, 1.6f);
+			font.draw(batch, "You have found a new item!", textureLeft + 20f, textureTop - 20f);
+			font.setScale(2.2f, 2.2f);
+			font.draw(batch, "Medium Lure", textureLeft + 120f, textureTop - 90f);
+			font.setScale(1.6f, 1.6f);
+			font.draw(batch, "The Medium Lure lets you catch Medium Sized fish", textureLeft + 120f, textureTop - 130f);
+			font.draw(batch, "Cost", textureLeft + 120f, textureTop - 180f);
 		}
 	}
 
@@ -101,19 +124,17 @@ public class Shop extends GameObject {
 		}
 	}
 	
-	public void open(float f, float g) {
-		System.out.println("Open!");
+	public void open() {
+		open = true;
 		if (calcShopItem() /*&& game.getPlayer().canAfford(activeItem)*/) {
-			game.spawn(this);
-			setPosition(f, g);
+			open = true;
 			Rectangle space = getSpace();
 			activeItem.setPosition(space.x + 10, space.y + (space.height - activeItem.getHeight()) / 2f);
 		}
 	}
 	
 	public void close() {
-		game.despawn(this);
-		game.despawn(activeItem);
+		open = false;
 		activeItem = null;
 	}
 	
