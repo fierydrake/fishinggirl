@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -28,8 +29,8 @@ public abstract class Fish extends GameObject{
 		}
 	}
 	
-	protected abstract Collider getEatCollider();
-	protected abstract Collider getSeeCollider();
+	protected abstract RectangleCollider getEatCollider();
+	protected abstract RectangleCollider getSeeCollider();
 	
 	protected boolean isFlipped() { return flipped; }
 	
@@ -77,11 +78,14 @@ public abstract class Fish extends GameObject{
 	@Override
 	public void debugDraw(ShapeRenderer lineRenderer) {
 		super.debugDraw(lineRenderer);
+		
+		final Polygon eatColliderPolygon = getEatCollider().getWorldCollisionPolygon();
 		lineRenderer.setColor(Color.GREEN);
-		Rectangle r = getEatCollider().getWorldCollisionRectangle();
-		lineRenderer.rect(r.x, r.y, r.width, r.height);
-		r = getSeeCollider().getWorldCollisionRectangle();
-		lineRenderer.rect(r.x, r.y, r.width, r.height);
+		lineRenderer.polygon(eatColliderPolygon.getVertices());
+
+		final Polygon seeColliderPolygon = getSeeCollider().getWorldCollisionPolygon();
+		lineRenderer.setColor(Color.GREEN);
+		lineRenderer.polygon(seeColliderPolygon.getVertices());
 	}
 	
 }

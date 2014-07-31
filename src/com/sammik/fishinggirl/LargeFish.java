@@ -10,19 +10,19 @@ public class LargeFish extends Fish {
 //	private Collider seeCollider = new Collider(this, seeColliderBounds.x, seeColliderBounds.y, seeColliderBounds.width, seeColliderBounds.height);
 	
 	private float mouthSize = 24f;
-	private Collider seeCollider = new Collider(this, 1, 1, 2, 2);
+	private RectangleCollider seeCollider = new RectangleCollider(this, 1, 1, 2, 2);
 
 	public LargeFish(final FishingGirlGame game, final Texture texture, final float x, float y){
 		super(game, texture, x, y, getMouthPositionForTexture(game, texture));
 	}
 
 	@Override
-	protected Collider getEatCollider() {
-		return new Collider(this, mouthPosition.x - mouthSize / 2f, mouthPosition.y - mouthSize / 2f, mouthSize, mouthSize);
+	protected RectangleCollider getEatCollider() {
+		return new RectangleCollider(this, mouthPosition.x - mouthSize / 2f, mouthPosition.y - mouthSize / 2f, mouthSize, mouthSize);
 	}
 	
 	@Override
-	protected Collider getSeeCollider() {
+	protected RectangleCollider getSeeCollider() {
 		return seeCollider;
 	}
 	

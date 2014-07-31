@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class SmallFish extends Fish{
 	private float mouthSize = 7f;
-	private Collider seeCollider = new Collider(this, 0, 0, 1, 1);
+	private RectangleCollider seeCollider = new RectangleCollider(this, 0, 0, 1, 1);
 	
 	public SmallFish(final FishingGirlGame game, final Texture texture, final float x, float y) {
 		super(game, texture, x, y, getMouthPositionForTexture(game, texture));
@@ -14,12 +14,12 @@ public class SmallFish extends Fish{
 	}
 	
 	@Override
-	protected Collider getEatCollider() {
-		return new Collider(this, mouthPosition.x - mouthSize / 2f, mouthPosition.y - mouthSize / 2f, mouthSize, mouthSize);
+	protected RectangleCollider getEatCollider() {
+		return new RectangleCollider(this, mouthPosition.x - mouthSize / 2f, mouthPosition.y - mouthSize / 2f, mouthSize, mouthSize);
 	}
 	
 	@Override
-	protected Collider getSeeCollider() {
+	protected RectangleCollider getSeeCollider() {
 		return seeCollider;
 	}
 	
