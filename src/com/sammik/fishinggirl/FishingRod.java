@@ -6,11 +6,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.sammik.fishinggirl.Lure.LureSize;
 
 public class FishingRod extends GameObject {
 	public enum RodState { IDLE, CASTING, PULLING }
 	
-	private Lure lure;
+	private Hook hook;
 	private float poleEndX, poleEndY;
 	private RodState rodState = RodState.IDLE;
 	private int pullingForce = 0, maxPullingForce = 150;
@@ -27,27 +28,30 @@ public class FishingRod extends GameObject {
 		poleEndX = getX() + (getWidth()/2 + 45);
 		poleEndY = getY() - 10;
 		
-		lure = new Lure(game, this, Lure.LureSize.SMALL);
+		hook = new Hook(game, this);
+		game.spawn(hook);
+		Lure lure = new Lure(game, this, LureSize.SMALL);
 		game.spawn(lure);
+		hook.attach(lure);
 	}
 	
 	private boolean touchDownLureAttached = false;
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		touchDownLureAttached = lure.isAttached();
+		touchDownLureAttached = hook.isAttached();
 		if (button == Input.Buttons.LEFT) {
-			lure.setPullAmount(5f);
+			hook.setPullAmount(5f);
 		} else {
-			lure.setPullAmount(0);
+			hook.setPullAmount(0);
 		}
 		return false;
 	}
 	
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		lure.setPullAmount(0);
-		if (rodState == RodState.PULLING && lure.isAttached()) {
+		hook.setPullAmount(0);
+		if (rodState == RodState.PULLING && hook.isAttached()) {
 			cast();
 		}
-		else if (touchDownLureAttached && rodState == RodState.IDLE && lure.isAttached()){
+		else if (touchDownLureAttached && rodState == RodState.IDLE && hook.isAttached()){
 			rodState = RodState.PULLING;
 		}
 		return true;
@@ -76,8 +80,8 @@ public class FishingRod extends GameObject {
 		poleEndX = (float) (getByOriginX() + r * Math.cos(2.0*Math.PI * (ang/360.0)));
 		poleEndY = (float) (getByOriginY() + r * Math.sin(2.0*Math.PI * (ang/360.0)));
 		
-		if (lure != null) {
-			lure.update();
+		if (hook != null) {
+			hook.update();
 		}
 	}
 	
@@ -87,7 +91,7 @@ public class FishingRod extends GameObject {
 	
 	public void drawLines(ShapeRenderer lineRenderer) {
 		lineRenderer.setColor(Color.BLACK);
-		lineRenderer.line(poleEndX, poleEndY, lure.getX() + lure.getWidth() / 2, lure.getY() + lure.getHeight() / 2);
+		lineRenderer.line(poleEndX, poleEndY, hook.getX() + hook.getWidth() / 2, hook.getY() + hook.getHeight() / 2);
 	}
 	
 	public void pullBack() {
@@ -96,7 +100,7 @@ public class FishingRod extends GameObject {
 	
 	public void castAnimation() {
 		if((rodState == RodState.CASTING || rodState == RodState.IDLE) && getRotation() < releasePoint) {
-			lure.cast(pullingForce);
+			hook.cast(pullingForce);
 			rodState = RodState.CASTING;
 		}
 		
@@ -117,7 +121,11 @@ public class FishingRod extends GameObject {
 	}
 
 	public boolean hasAttachedLure() {
-		return lure != null && lure.isAttached();
+		return hook != null && hook.isAttached();
+	}
+
+	public Hook getHook() {
+		return hook;
 	}
 
 }

@@ -120,6 +120,7 @@ public class FishingGirlGame implements ApplicationListener {
 	public Shop getLureShop() { return lureShop; }
 	public Shop getRodShop() { return rodShop; }
 	public Player getPlayer() { return player; }
+	public FishingRod getFishingRod() { return fishingRod; }
 
 	public void spawn(final GameObject obj, final Layer layer, boolean active) {
 		if (obj == null) return;
@@ -310,6 +311,10 @@ public class FishingGirlGame implements ApplicationListener {
 			// TODO Auto-generated method stub
 			return false;
 		}
+	}
+
+	public Hook getHook() {
+		return fishingRod.getHook();
 	}
 
 }

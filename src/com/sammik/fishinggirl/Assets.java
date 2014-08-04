@@ -47,6 +47,7 @@ public class Assets {
 		load("shopTipRod", "rodshoptip.png");
 		load("shopTipLure", "lureshoptip.png");
 		load("bombLure", "lureBomb.png");
+		load("crapHook", "crapHook.png");
 	}
 
 	public Texture texture(final String name) {

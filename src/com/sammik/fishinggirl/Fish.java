@@ -11,11 +11,12 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public abstract class Fish extends GameObject{
+public abstract class Fish extends GameObject implements Hookable {
 	public enum Type {
 		SMALL, MEDIUM, LARGE
 	}
 	private boolean flipped = false;
+	private boolean isHooked = false;
 	private Vector2 direction;
 	protected Vector2 mouthPosition;
 	protected float speed = 30.0f;
@@ -27,6 +28,16 @@ public abstract class Fish extends GameObject{
 		if (new Random().nextInt(2) == 1) {
 			switchDirection();
 		}
+		
+	}
+	
+	public void hook() {
+		isHooked = true;
+		setOrigin(getOriginX() + mouthPosition.x, getOriginY() + mouthPosition.y);
+	}
+	
+	public void unhook() {
+		isHooked = false;
 	}
 	
 	protected Vector2 getDirection() {
@@ -39,6 +50,20 @@ public abstract class Fish extends GameObject{
 	protected boolean isFlipped() { return flipped; }
 	
 	public void update(){
+		if (isHooked)	{
+			updateAttached();
+		} else {
+			updateSwimming();
+		}
+	}
+
+	private void updateAttached() {
+		setRotation(flipped ? 90 : -90);
+		setPositionByOrigin(game.getHook().getByOriginX(), game.getHook().getByOriginY());
+//		updateSwimming();
+	}
+
+	private void updateSwimming() {
 		float newX = getX() + direction.x * Gdx.graphics.getDeltaTime() * speed;
 		if (newX < game.getCliff().getRight() || newX > game.getWater().getRight()) {
 			newX = getX() + direction.x * Gdx.graphics.getDeltaTime() * speed;
